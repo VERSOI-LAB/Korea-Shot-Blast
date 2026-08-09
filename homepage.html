@@ -6,6 +6,7 @@
     <title>한국브라스트(주) | 표면처리 샌딩·쇼트 블라스트 전문기업</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
     <!-- FontAwesome 아이콘 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -39,7 +40,7 @@
                 <button onclick="switchPage('support')" class="nav-link hover:text-red-700 transition py-2" data-nav="support">고객지원</button>
             </nav>
             <div class="flex items-center gap-2">
-                <button onclick="openModal('quoteModal')" class="bg-red-700 hover:bg-red-800 text-white px-2.5 sm:px-5 py-2.5 rounded font-bold text-xs uppercase tracking-wider transition shadow whitespace-nowrap"><span class="hidden sm:inline">빠른 </span>견적문의</button>
+                <button onclick="quoteInquiryContext=null; openModal('quoteModal')" class="bg-red-700 hover:bg-red-800 text-white px-2.5 sm:px-5 py-2.5 rounded font-bold text-xs uppercase tracking-wider transition shadow whitespace-nowrap"><span class="hidden sm:inline">빠른 </span>견적문의</button>
                 <button onclick="toggleMobileMenu()" id="mobileMenuBtn" aria-label="메뉴 열기" class="xl:hidden text-slate-800 text-xl w-10 h-10 flex items-center justify-center rounded hover:bg-slate-100 transition">
                     <i class="fa-solid fa-bars"></i>
                 </button>
@@ -198,15 +199,14 @@
                             <h4 class="font-bold text-slate-900 text-base"><i class="fa-solid fa-bullhorn text-red-700 mr-2"></i> 공지사항</h4>
                             <button onclick="switchPage('support')" class="text-xs text-red-700 font-bold hover:underline">더보기 &rarr;</button>
                         </div>
-                        <div class="p-3 bg-white rounded border border-slate-200 text-sm text-slate-700 flex justify-between items-center">
-                            <span>시화 MTV 신축공장 준공 안내</span>
-                            <span class="text-xs text-slate-400">2017-07</span>
+                        <div id="homeNoticePreview" class="p-3 bg-white rounded border border-slate-200 text-sm text-slate-700 flex justify-between items-center">
+                            <span class="text-slate-400">불러오는 중...</span>
                         </div>
                     </div>
                     <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200">
                         <div class="flex items-center justify-between mb-4">
                             <h4 class="font-bold text-slate-900 text-base"><i class="fa-solid fa-headset text-red-700 mr-2"></i> 빠른 고객센터</h4>
-                            <button onclick="openModal('quoteModal')" class="text-xs text-red-700 font-bold hover:underline">문의하기 &rarr;</button>
+                            <button onclick="quoteInquiryContext=null; openModal('quoteModal')" class="text-xs text-red-700 font-bold hover:underline">문의하기 &rarr;</button>
                         </div>
                         <div class="p-3 bg-white rounded border border-slate-200 text-sm text-slate-700 flex justify-between items-center">
                             <span>장비 도입 및 맞춤형 견적 상담을 지원해 드립니다.</span>
@@ -1854,6 +1854,13 @@
                     </div>
 
                 </div>
+                <div id="extraProducts-products" class="hidden mt-10">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-xs font-bold text-red-700 uppercase tracking-wider">신규 등록 제품</span>
+                        <span class="flex-1 h-px bg-slate-200"></span>
+                    </div>
+                    <div id="extraProductsList-products" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                </div>
             </div>
         </section>
 
@@ -1895,7 +1902,7 @@
 
                     <!-- 장비류일 때만 노출될 견적 문의 버튼 영역 -->
                     <div id="quoteButtonContainer">
-                        <button onclick="openModal('quoteModal')" class="w-full bg-red-700 hover:bg-red-800 text-white py-4 rounded-xl font-bold text-base transition shadow">이 제품 견적 문의하기</button>
+                        <button onclick="quoteInquiryContext=document.getElementById('detailTitle').innerText; openModal('quoteModal')" class="w-full bg-red-700 hover:bg-red-800 text-white py-4 rounded-xl font-bold text-base transition shadow">이 제품 견적 문의하기</button>
                     </div>
                 </div>
             </div>
@@ -2023,6 +2030,13 @@
                         <p class="text-xs text-slate-500 mb-3 line-clamp-2">먼지와 독성이 없다. (자연 친화적)</p>
                         <span class="text-xs font-bold text-red-700">상세페이지 &rarr;</span>
                     </div>
+                </div>
+                <div id="extraProducts-abrasives" class="hidden mt-10">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-xs font-bold text-red-700 uppercase tracking-wider">신규 등록 제품</span>
+                        <span class="flex-1 h-px bg-slate-200"></span>
+                    </div>
+                    <div id="extraProductsList-abrasives" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
                 </div>
             </div>
         </section>
@@ -2637,6 +2651,13 @@
                         </div>
                     </div>
                 </div>
+                <div id="extraProducts-consumables" class="hidden mt-10">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-xs font-bold text-red-700 uppercase tracking-wider">신규 등록 제품</span>
+                        <span class="flex-1 h-px bg-slate-200"></span>
+                    </div>
+                    <div id="extraProductsList-consumables" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                </div>
             </div>
         </section>
 
@@ -2709,41 +2730,16 @@
 
                 <div id="support-notice" class="support-pane bg-slate-50 p-4 sm:p-8 rounded-2xl border border-slate-200">
                     <h3 class="text-xl font-bold text-slate-900 mb-4">공지사항</h3>
-                    <div class="space-y-3">
-                        <div class="p-4 border border-slate-200 rounded bg-white flex justify-between items-center">
-                            <span class="text-sm font-semibold text-slate-800">시화 MTV 신축공장 준공식 안내</span>
-                            <span class="text-xs text-slate-400">2017-07</span>
-                        </div>
-                        <div class="p-4 border border-slate-200 rounded bg-white flex justify-between items-center">
-                            <span class="text-sm font-semibold text-slate-800">제52회 수출의 탑(천만불) 수상</span>
-                            <span class="text-xs text-slate-400">2014~2015</span>
-                        </div>
-                        <div class="p-4 border border-slate-200 rounded bg-white flex justify-between items-center">
-                            <span class="text-sm font-semibold text-slate-800">녹색기술 인증 취득 (미래창조과학부장관)</span>
-                            <span class="text-xs text-slate-400">2014~2015</span>
-                        </div>
-                        <div class="p-4 border border-slate-200 rounded bg-white flex justify-between items-center">
-                            <span class="text-sm font-semibold text-slate-800">대통령 산업포장 수여</span>
-                            <span class="text-xs text-slate-400">-</span>
-                        </div>
-                        <div class="p-4 border border-slate-200 rounded bg-white flex justify-between items-center">
-                            <span class="text-sm font-semibold text-slate-800">블라스트 기술서적 출간</span>
-                            <span class="text-xs text-slate-400">-</span>
-                        </div>
+                    <div id="supportNoticeList" class="space-y-3">
+                        <p class="text-slate-400 text-sm">불러오는 중...</p>
                     </div>
                 </div>
 
                 <div id="support-used" class="support-pane hidden bg-slate-50 p-4 sm:p-8 rounded-2xl border border-slate-200">
                     <h3 class="text-xl font-bold text-slate-900 mb-4">중고장비 매물 안내</h3>
                     <p class="text-slate-600 text-sm mb-6">성능 점검 및 오버홀을 완료한 가성비 우수한 중고 샌딩장비입니다.</p>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="p-6 border border-slate-200 rounded bg-white shadow-sm">
-                            <div class="h-40 bg-slate-200 rounded mb-4 flex items-center justify-center text-xs text-slate-500">중고장비 실제 사진</div>
-                            <span class="text-xs text-emerald-600 font-bold uppercase">판매중 (매물번호 #202)</span>
-                            <h4 class="font-bold text-slate-900 text-base mt-1 mb-2">중고 흡입식 자동 샌딩기</h4>
-                            <p class="text-xs text-slate-500 mb-4">사용감 적음, 오버홀 완료, 즉시 출고 가능</p>
-                            <button onclick="openModal('quoteModal')" class="text-xs font-bold bg-red-700 text-white px-4 py-2 rounded">구매 문의하기</button>
-                        </div>
+                    <div id="supportUsedList" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <p class="text-slate-400 text-sm">불러오는 중...</p>
                     </div>
                 </div>
             </div>
@@ -2772,31 +2768,31 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">업체명 *</label>
-                        <input type="text" required class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
+                        <input type="text" name="company" required class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">담당자 성함 *</label>
-                        <input type="text" required class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
+                        <input type="text" name="contact_name" required class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">연락처 *</label>
-                        <input type="text" required placeholder="010-0000-0000" class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
+                        <input type="text" name="phone" required placeholder="010-0000-0000" class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">이메일</label>
-                        <input type="email" class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
+                        <input type="email" name="email" class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">제품 최대 사이즈</label>
-                        <input type="text" placeholder="예: 500 x 500 x 300 mm" class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
+                        <input type="text" name="product_size" placeholder="예: 500 x 500 x 300 mm" class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">처리방법 *</label>
-                        <select class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
+                        <select name="process_method" class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
                             <option value="수동">수동</option>
                             <option value="자동">자동</option>
                         </select>
@@ -2805,16 +2801,16 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">하루 생산량</label>
-                        <input type="text" placeholder="예: 1,000개" class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
+                        <input type="text" name="daily_qty" placeholder="예: 1,000개" class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">제품 이미지 / 도면 파일</label>
-                        <input type="file" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-2 text-xs focus:outline-none focus:border-red-700">
+                        <input type="file" name="file" accept="image/*,.pdf" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-2 text-xs focus:outline-none focus:border-red-700">
                     </div>
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">문의사항</label>
-                    <textarea rows="3" placeholder="문의하실 내용을 상세히 적어주세요." class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700"></textarea>
+                    <textarea rows="3" name="message" placeholder="문의하실 내용을 상세히 적어주세요." class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700"></textarea>
                 </div>
                 <button type="submit" class="w-full bg-red-700 hover:bg-red-800 text-white py-3.5 rounded font-bold text-sm transition">견적 문의 접수하기</button>
             </form>
@@ -2830,36 +2826,36 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">업체명 *</label>
-                        <input type="text" required class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
+                        <input type="text" name="company" required class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">성함 *</label>
-                        <input type="text" required class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
+                        <input type="text" name="contact_name" required class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">연락처 *</label>
-                        <input type="text" required placeholder="010-0000-0000" class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
+                        <input type="text" name="phone" required placeholder="010-0000-0000" class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">이메일</label>
-                        <input type="email" class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
+                        <input type="email" name="email" class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">제품 사이즈</label>
-                        <input type="text" placeholder="예: 100 x 100 mm" class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
+                        <input type="text" name="product_size" placeholder="예: 100 x 100 mm" class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">임가공 수량</label>
-                        <input type="text" placeholder="예: 500개" class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
+                        <input type="text" name="processing_qty" placeholder="예: 500개" class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
                     </div>
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">제품 이미지</label>
-                    <input type="file" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-2 text-xs focus:outline-none focus:border-red-700">
+                    <input type="file" name="file" accept="image/*" class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-2 text-xs focus:outline-none focus:border-red-700">
                 </div>
                 <button type="submit" class="w-full bg-red-700 hover:bg-red-800 text-white py-3.5 rounded font-bold text-sm transition">임가공 의뢰 제출하기</button>
             </form>
@@ -2868,6 +2864,11 @@
 
     <!-- ================= JAVASCRIPT ================= -->
     <script>
+        const SUPABASE_URL = 'https://zaajbkjzpzwxdinnrekv.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InphYWpia2p6cHp3eGRpbm5yZWt2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYyNjI2NzEsImV4cCI6MjEwMTgzODY3MX0.7iSVheNitm3W9o4kYVTaZuM4WXz7VJmTSfBQi6mNf-A';
+        const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let quoteInquiryContext = null;
+
         let currentOriginPage = 'products';
 
         let heroIndex = 0;
@@ -3060,12 +3061,138 @@
             switchPage('product-detail');
         }
 
-        function handleFormSubmit(event, modalId) {
+        async function handleFormSubmit(event, modalId) {
             event.preventDefault();
-            alert('문의가 성공적으로 접수되었습니다. 담당자가 확인 후 신속하게 연락드리겠습니다.');
-            closeModal(modalId);
-            event.target.reset();
+            const form = event.target;
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = '접수 중...';
+            try {
+                const fd = new FormData(form);
+                const type = modalId === 'quoteModal' ? 'quote' : 'processing';
+
+                let file_url = null;
+                const file = fd.get('file');
+                if (file && file.size > 0) {
+                    const path = `${type}/${Date.now()}_${file.name}`;
+                    const { error: upErr } = await sb.storage.from('inquiry-files').upload(path, file);
+                    if (!upErr) file_url = path;
+                }
+
+                const payload = {
+                    type,
+                    company: fd.get('company') || '',
+                    contact_name: fd.get('contact_name') || '',
+                    phone: fd.get('phone') || '',
+                    email: fd.get('email') || null,
+                    product_size: fd.get('product_size') || null,
+                    process_method: fd.get('process_method') || null,
+                    daily_qty: fd.get('daily_qty') || null,
+                    processing_qty: fd.get('processing_qty') || null,
+                    message: fd.get('message') || null,
+                    file_url,
+                    product_context: type === 'quote' ? quoteInquiryContext : null
+                };
+
+                const { error } = await sb.from('inquiries').insert(payload);
+                if (error) throw error;
+
+                alert('문의가 성공적으로 접수되었습니다. 담당자가 확인 후 신속하게 연락드리겠습니다.');
+                closeModal(modalId);
+                form.reset();
+                quoteInquiryContext = null;
+            } catch (err) {
+                console.error(err);
+                alert('문의 접수 중 오류가 발생했습니다. 잠시 후 다시 시도해주시거나 전화(031-488-8390~1)로 문의해주세요.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }
         }
+
+        function esc(s) {
+            return (s ?? '').toString().replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+        }
+
+        async function loadHomeNotice() {
+            const el = document.getElementById('homeNoticePreview');
+            if (!el) return;
+            const { data, error } = await sb.from('notices').select('title,date_label').order('sort_order', { ascending: true }).limit(1);
+            if (error || !data || !data.length) { el.innerHTML = '<span class="text-slate-400">등록된 공지사항이 없습니다.</span>'; return; }
+            el.innerHTML = `<span>${esc(data[0].title)}</span><span class="text-xs text-slate-400">${esc(data[0].date_label || '')}</span>`;
+        }
+
+        async function loadSupportNotices() {
+            const el = document.getElementById('supportNoticeList');
+            if (!el) return;
+            const { data, error } = await sb.from('notices').select('title,date_label').order('sort_order', { ascending: true });
+            if (error) { el.innerHTML = '<p class="text-red-500 text-sm">공지사항을 불러오지 못했습니다.</p>'; return; }
+            if (!data.length) { el.innerHTML = '<p class="text-slate-400 text-sm">등록된 공지사항이 없습니다.</p>'; return; }
+            el.innerHTML = data.map(n => `
+                <div class="p-4 border border-slate-200 rounded bg-white flex justify-between items-center gap-3">
+                    <span class="text-sm font-semibold text-slate-800">${esc(n.title)}</span>
+                    <span class="text-xs text-slate-400 whitespace-nowrap">${esc(n.date_label || '')}</span>
+                </div>`).join('');
+        }
+
+        async function loadSupportUsedEquipment() {
+            const el = document.getElementById('supportUsedList');
+            if (!el) return;
+            const { data, error } = await sb.from('used_equipment').select('*').order('sort_order', { ascending: true });
+            if (error) { el.innerHTML = '<p class="text-red-500 text-sm">매물 정보를 불러오지 못했습니다.</p>'; return; }
+            if (!data.length) { el.innerHTML = '<p class="text-slate-400 text-sm">현재 등록된 중고장비 매물이 없습니다.</p>'; return; }
+            el.innerHTML = data.map(item => `
+                <div class="p-6 border border-slate-200 rounded bg-white shadow-sm">
+                    <div class="h-40 bg-slate-200 rounded mb-4 flex items-center justify-center text-xs text-slate-500 overflow-hidden">
+                        ${item.image_url ? `<img src="${esc(item.image_url)}" class="w-full h-full object-cover">` : '중고장비 실제 사진'}
+                    </div>
+                    <span class="text-xs text-emerald-600 font-bold uppercase">${esc(item.status)}${item.listing_no ? ` (매물번호 ${esc(item.listing_no)})` : ''}</span>
+                    <h4 class="font-bold text-slate-900 text-base mt-1 mb-2">${esc(item.title)}</h4>
+                    <p class="text-xs text-slate-500 mb-4">${esc(item.description || '')}</p>
+                    <button onclick="quoteInquiryContext=null; openModal('quoteModal')" class="text-xs font-bold bg-red-700 text-white px-4 py-2 rounded">구매 문의하기</button>
+                </div>`).join('');
+        }
+
+        let extraProductsCache = [];
+        async function loadExtraProducts() {
+            const { data, error } = await sb.from('products_extra').select('*').eq('active', true).order('created_at', { ascending: false });
+            if (error || !data) return;
+            extraProductsCache = data;
+            ['products', 'abrasives', 'consumables'].forEach(section => {
+                const wrap = document.getElementById('extraProducts-' + section);
+                const list = document.getElementById('extraProductsList-' + section);
+                if (!wrap || !list) return;
+                const items = data.filter(p => p.section === section);
+                if (!items.length) { wrap.classList.add('hidden'); return; }
+                wrap.classList.remove('hidden');
+                list.innerHTML = items.map(p => `
+                    <div class="p-6 rounded-xl bg-white border border-slate-200 shadow-sm hover:border-red-700 transition cursor-pointer" onclick="openExtraProductDetail('${p.id}')">
+                        <div class="h-40 bg-white rounded mb-4 flex items-center justify-center overflow-hidden">
+                            ${p.thumb_url ? `<img src="${esc(p.thumb_url)}" alt="${esc(p.name)}" class="max-h-full max-w-full object-contain">` : '<i class="fa-solid fa-image text-2xl text-slate-300"></i>'}
+                        </div>
+                        ${p.category ? `<span class="text-xs text-red-700 font-bold uppercase">${esc(p.category)}</span>` : ''}
+                        <h4 class="font-bold text-slate-900 text-base mt-1 mb-2">${esc(p.name)}</h4>
+                        <p class="text-slate-600 text-xs mb-4 line-clamp-3">${esc(p.short_desc || '')}</p>
+                        <span class="text-sm font-bold text-red-700">상세페이지 &rarr;</span>
+                    </div>`).join('');
+            });
+        }
+
+        function openExtraProductDetail(id) {
+            const p = extraProductsCache.find(x => x.id === id);
+            if (!p) return;
+            const specsHtml = (p.specs || []).map(s =>
+                `<tr><th class="w-28 sm:w-40 py-2 pr-3 text-slate-500 font-semibold align-top text-xs sm:text-sm whitespace-nowrap">${esc(s.label)}</th><td class="py-2 text-slate-800 text-xs sm:text-sm">${esc(s.value)}</td></tr>`
+            ).join('');
+            const specsTable = `<table class="w-full text-left border-t border-slate-200"><tbody class="divide-y divide-slate-200">${specsHtml}</tbody></table>`;
+            openProductDetail(p.name, specsTable, p.full_desc || p.short_desc || '', p.section === 'products', p.section, p.thumb_url || null);
+        }
+
+        loadHomeNotice();
+        loadSupportNotices();
+        loadSupportUsedEquipment();
+        loadExtraProducts();
     </script>
 </body>
 </html>

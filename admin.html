@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>관리자 페이지 | 한국브라스트(주)</title>
+<meta name="robots" content="noindex, nofollow">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+    body { font-family: 'Pretendard', sans-serif; background-color: #f8fafc; color: #111827; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .admin-tab.active { background-color: #b91c1c; color: #fff; }
+    .admin-tab { color: #475569; }
+</style>
+</head>
+<body class="antialiased">
+
+    <!-- 인증 화면 -->
+    <div id="authScreen" class="min-h-screen flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 w-full max-w-sm">
+            <h1 class="text-xl font-black text-slate-900 mb-1">BLAST 관리자</h1>
+            <p class="text-slate-500 text-xs mb-6">한국브라스트(주) 홈페이지 관리자 페이지입니다.</p>
+
+            <div id="bootstrapHint" class="hidden mb-4 p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-xs leading-relaxed">
+                아직 등록된 관리자가 없습니다. 아래에서 <b>최초 관리자 등록</b>을 진행해주세요. 등록 후에는 이 계정으로만 로그인할 수 있습니다.
+            </div>
+
+            <div class="flex gap-2 mb-5 bg-slate-100 rounded-lg p-1 text-sm font-bold">
+                <button type="button" id="modeLoginBtn" onclick="setAuthMode('login')" class="flex-1 py-2 rounded-md transition">로그인</button>
+                <button type="button" id="modeSignupBtn" onclick="setAuthMode('signup')" class="flex-1 py-2 rounded-md transition">최초 관리자 등록</button>
+            </div>
+
+            <form onsubmit="handleAuthSubmit(event)" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">이메일</label>
+                    <input id="authEmail" type="email" required class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">비밀번호</label>
+                    <input id="authPassword" type="password" required minlength="6" class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
+                </div>
+                <button type="submit" id="authSubmitBtn" class="w-full bg-red-700 hover:bg-red-800 text-white py-3 rounded font-bold text-sm transition">로그인</button>
+                <p id="authMsg" class="text-xs mt-2 min-h-[1em]"></p>
+            </form>
+            <a href="homepage.html" class="block text-center text-xs text-slate-400 hover:text-slate-600 mt-6">&larr; 홈페이지로 돌아가기</a>
+        </div>
+    </div>
+
+    <!-- 권한 없음 화면 -->
+    <div id="deniedScreen" class="hidden min-h-screen flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 w-full max-w-sm text-center">
+            <i class="fa-solid fa-lock text-3xl text-slate-300 mb-4"></i>
+            <h2 class="font-bold text-slate-900 mb-2">관리자 권한이 없습니다</h2>
+            <p class="text-slate-500 text-xs mb-6">이 계정은 관리자로 등록되어 있지 않습니다. 관리자에게 문의해주세요.</p>
+            <button onclick="logout()" class="w-full bg-slate-800 hover:bg-slate-900 text-white py-3 rounded font-bold text-sm transition">로그아웃</button>
+        </div>
+    </div>
+
+    <!-- 대시보드 -->
+    <div id="dashboard" class="hidden min-h-screen">
+        <header class="bg-white border-b border-slate-200 sticky top-0 z-20">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="font-black text-slate-900">BLAST 관리자</span>
+                    <span id="userEmailBadge" class="hidden sm:inline text-xs text-slate-400 ml-2"></span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <a href="homepage.html" target="_blank" class="text-xs font-bold text-slate-500 hover:text-red-700 px-3 py-2">사이트 보기 &nearr;</a>
+                    <button onclick="logout()" class="text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded transition">로그아웃</button>
+                </div>
+            </div>
+        </header>
+
+        <main class="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+            <div class="flex flex-wrap gap-2 mb-8">
+                <button onclick="switchTab('inquiries')" class="admin-tab tab-btn px-4 py-2.5 rounded text-sm font-bold bg-white border border-slate-200 transition" data-tab="inquiries">문의 접수 내역</button>
+                <button onclick="switchTab('notices')" class="admin-tab tab-btn px-4 py-2.5 rounded text-sm font-bold bg-white border border-slate-200 transition" data-tab="notices">공지사항</button>
+                <button onclick="switchTab('used')" class="admin-tab tab-btn px-4 py-2.5 rounded text-sm font-bold bg-white border border-slate-200 transition" data-tab="used">중고장비 매물</button>
+                <button onclick="switchTab('products')" class="admin-tab tab-btn px-4 py-2.5 rounded text-sm font-bold bg-white border border-slate-200 transition" data-tab="products">신규 제품 추가</button>
+            </div>
+
+            <!-- 문의 접수 내역 -->
+            <section id="tab-inquiries" class="tab-panel">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="font-bold text-slate-900 text-lg">문의 접수 내역</h2>
+                    <button onclick="loadInquiries()" class="text-xs font-bold text-red-700 hover:underline"><i class="fa-solid fa-rotate"></i> 새로고침</button>
+                </div>
+                <div id="inquiriesList" class="space-y-3"></div>
+            </section>
+
+            <!-- 공지사항 -->
+            <section id="tab-notices" class="tab-panel">
+                <h2 class="font-bold text-slate-900 text-lg mb-4">공지사항</h2>
+                <form onsubmit="createNotice(event)" class="bg-white p-5 rounded-xl border border-slate-200 mb-6 grid grid-cols-1 sm:grid-cols-[1fr_140px_auto] gap-3 items-end">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">제목 *</label>
+                        <input id="noticeTitleInput" required class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2.5 text-sm focus:outline-none focus:border-red-700">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">날짜 표시</label>
+                        <input id="noticeDateInput" placeholder="예: 2026-08" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2.5 text-sm focus:outline-none focus:border-red-700">
+                    </div>
+                    <button type="submit" class="bg-red-700 hover:bg-red-800 text-white px-5 py-2.5 rounded font-bold text-sm transition whitespace-nowrap">추가</button>
+                </form>
+                <div id="noticesList" class="space-y-2"></div>
+            </section>
+
+            <!-- 중고장비 -->
+            <section id="tab-used" class="tab-panel">
+                <h2 class="font-bold text-slate-900 text-lg mb-4">중고장비 매물</h2>
+                <form onsubmit="createUsedEquipment(event)" class="bg-white p-5 rounded-xl border border-slate-200 mb-6 space-y-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">장비명 *</label>
+                            <input id="ueTitleInput" required class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2.5 text-sm focus:outline-none focus:border-red-700">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">매물번호</label>
+                            <input id="ueListingNoInput" placeholder="예: #203" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2.5 text-sm focus:outline-none focus:border-red-700">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">상태</label>
+                            <select id="ueStatusInput" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2.5 text-sm focus:outline-none focus:border-red-700">
+                                <option value="판매중">판매중</option>
+                                <option value="예약중">예약중</option>
+                                <option value="판매완료">판매완료</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">설명</label>
+                        <textarea id="ueDescInput" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2.5 text-sm focus:outline-none focus:border-red-700"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">사진</label>
+                        <input id="ueImageInput" type="file" accept="image/*" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-xs focus:outline-none focus:border-red-700">
+                    </div>
+                    <button type="submit" class="bg-red-700 hover:bg-red-800 text-white px-5 py-2.5 rounded font-bold text-sm transition">매물 추가</button>
+                </form>
+                <div id="usedList" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+            </section>
+
+            <!-- 신규 제품 추가 -->
+            <section id="tab-products" class="tab-panel">
+                <h2 class="font-bold text-slate-900 text-lg mb-1">신규 제품 추가</h2>
+                <p class="text-slate-500 text-xs mb-4">기존 263개 제품/소모품/연마재는 코드에 고정되어 있어 여기서 수정되지 않습니다. 여기서 추가한 항목은 각 페이지 하단 "신규 등록 제품" 영역에 표시됩니다.</p>
+                <form onsubmit="submitProduct(event)" class="bg-white p-5 rounded-xl border border-slate-200 mb-6 space-y-3">
+                    <input type="hidden" id="prodEditId" value="">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">구분 *</label>
+                            <select id="prodSectionInput" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2.5 text-sm focus:outline-none focus:border-red-700">
+                                <option value="products">제품소개</option>
+                                <option value="abrasives">연마재</option>
+                                <option value="consumables">소모품</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">카테고리</label>
+                            <input id="prodCategoryInput" placeholder="예: 흡입식 샌딩기" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2.5 text-sm focus:outline-none focus:border-red-700">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">제품명 *</label>
+                            <input id="prodNameInput" required class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2.5 text-sm focus:outline-none focus:border-red-700">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">요약 설명 (카드에 표시)</label>
+                        <input id="prodShortDescInput" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2.5 text-sm focus:outline-none focus:border-red-700">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">사진</label>
+                        <input id="prodImageInput" type="file" accept="image/*" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-xs focus:outline-none focus:border-red-700">
+                        <p class="text-[11px] text-slate-400 mt-1">수정 시 비워두면 기존 사진이 유지됩니다.</p>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">상세 규격 (한 줄에 하나씩, "항목: 내용" 형식)</label>
+                        <textarea id="prodSpecsInput" rows="4" placeholder="분사방식: Suction(흡입식)&#10;전체크기: 590W x 750D x 1,230H" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2.5 text-sm font-mono focus:outline-none focus:border-red-700"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">상세 설명</label>
+                        <textarea id="prodFullDescInput" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2.5 text-sm focus:outline-none focus:border-red-700"></textarea>
+                    </div>
+                    <label class="flex items-center gap-2 text-sm text-slate-700">
+                        <input type="checkbox" id="prodActiveInput" checked class="w-4 h-4"> 사이트에 노출 (체크 해제 시 숨김)
+                    </label>
+                    <div class="flex gap-2">
+                        <button type="submit" id="prodSubmitBtn" class="bg-red-700 hover:bg-red-800 text-white px-5 py-2.5 rounded font-bold text-sm transition">제품 추가</button>
+                        <button type="button" id="prodCancelBtn" onclick="cancelProductEdit()" class="hidden bg-slate-200 hover:bg-slate-300 text-slate-700 px-5 py-2.5 rounded font-bold text-sm transition">수정 취소</button>
+                    </div>
+                </form>
+                <div id="productsList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            </section>
+        </main>
+    </div>
+
+<script>
+    const SUPABASE_URL = 'https://zaajbkjzpzwxdinnrekv.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InphYWpia2p6cHp3eGRpbm5yZWt2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYyNjI2NzEsImV4cCI6MjEwMTgzODY3MX0.7iSVheNitm3W9o4kYVTaZuM4WXz7VJmTSfBQi6mNf-A';
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let currentUser = null;
+    let authMode = 'login';
+
+    async function init() {
+        const { data: { session } } = await sb.auth.getSession();
+        if (session) {
+            currentUser = session.user;
+            await afterLogin();
+        } else {
+            showAuthScreen();
+        }
+    }
+
+    function setAuthMode(mode) {
+        authMode = mode;
+        document.getElementById('modeLoginBtn').classList.toggle('bg-white', mode === 'login');
+        document.getElementById('modeLoginBtn').classList.toggle('shadow-sm', mode === 'login');
+        document.getElementById('modeLoginBtn').classList.toggle('text-slate-900', mode === 'login');
+        document.getElementById('modeSignupBtn').classList.toggle('bg-white', mode === 'signup');
+        document.getElementById('modeSignupBtn').classList.toggle('shadow-sm', mode === 'signup');
+        document.getElementById('modeSignupBtn').classList.toggle('text-slate-900', mode === 'signup');
+        document.getElementById('authSubmitBtn').textContent = mode === 'signup' ? '관리자로 등록하기' : '로그인';
+        document.getElementById('authMsg').textContent = '';
+    }
+
+    async function handleAuthSubmit(e) {
+        e.preventDefault();
+        const email = document.getElementById('authEmail').value.trim();
+        const password = document.getElementById('authPassword').value;
+        const msgEl = document.getElementById('authMsg');
+        msgEl.textContent = '';
+        msgEl.className = 'text-xs mt-2 min-h-[1em] text-slate-500';
+        try {
+            if (authMode === 'signup') {
+                const { data, error } = await sb.auth.signUp({ email, password });
+                if (error) throw error;
+                if (data.session) {
+                    currentUser = data.user;
+                    await afterLogin();
+                } else {
+                    msgEl.textContent = '가입 확인 이메일을 보냈습니다. 메일함에서 링크를 클릭한 뒤 "로그인" 탭에서 다시 로그인해주세요.';
+                    msgEl.className = 'text-xs mt-2 min-h-[1em] text-emerald-600';
+                }
+            } else {
+                const { data, error } = await sb.auth.signInWithPassword({ email, password });
+                if (error) throw error;
+                currentUser = data.user;
+                await afterLogin();
+            }
+        } catch (err) {
+            msgEl.textContent = err.message || '오류가 발생했습니다.';
+            msgEl.className = 'text-xs mt-2 min-h-[1em] text-red-600';
+        }
+    }
+
+    async function afterLogin() {
+        // 최초 1회: 관리자가 한 명도 없으면 본인을 관리자로 등록 (RLS가 두 번째 이후는 자동 차단)
+        await sb.from('admins').insert({ id: currentUser.id, email: currentUser.email });
+        const { data: isAdminData } = await sb.rpc('is_admin');
+        if (isAdminData) {
+            showDashboard();
+        } else {
+            showDenied();
+        }
+    }
+
+    function showAuthScreen() {
+        document.getElementById('authScreen').classList.remove('hidden');
+        document.getElementById('deniedScreen').classList.add('hidden');
+        document.getElementById('dashboard').classList.add('hidden');
+        setAuthMode('login');
+        checkBootstrap();
+    }
+
+    async function checkBootstrap() {
+        const { data } = await sb.rpc('admins_count');
+        const hint = document.getElementById('bootstrapHint');
+        if (data === 0) {
+            hint.classList.remove('hidden');
+            setAuthMode('signup');
+        } else {
+            hint.classList.add('hidden');
+        }
+    }
+
+    function showDenied() {
+        document.getElementById('authScreen').classList.add('hidden');
+        document.getElementById('deniedScreen').classList.remove('hidden');
+        document.getElementById('dashboard').classList.add('hidden');
+    }
+
+    function showDashboard() {
+        document.getElementById('authScreen').classList.add('hidden');
+        document.getElementById('deniedScreen').classList.add('hidden');
+        document.getElementById('dashboard').classList.remove('hidden');
+        document.getElementById('userEmailBadge').textContent = currentUser.email;
+        switchTab('inquiries');
+    }
+
+    async function logout() {
+        await sb.auth.signOut();
+        currentUser = null;
+        showAuthScreen();
+    }
+
+    function switchTab(tab) {
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('tab-' + tab).classList.add('active');
+        document.querySelector(`.tab-btn[data-tab="${tab}"]`).classList.add('active');
+        if (tab === 'inquiries') loadInquiries();
+        if (tab === 'notices') loadNotices();
+        if (tab === 'used') loadUsedEquipment();
+        if (tab === 'products') loadProducts();
+    }
+
+    function esc(s) {
+        return (s ?? '').toString().replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+    function fmtDate(iso) {
+        const d = new Date(iso);
+        return d.toLocaleString('ko-KR', { year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit' });
+    }
+
+    /* ===================== 문의 접수 내역 ===================== */
+    async function loadInquiries() {
+        const el = document.getElementById('inquiriesList');
+        el.innerHTML = '<p class="text-sm text-slate-400">불러오는 중...</p>';
+        const { data, error } = await sb.from('inquiries').select('*').order('created_at', { ascending: false });
+        if (error) { el.innerHTML = `<p class="text-sm text-red-600">${esc(error.message)}</p>`; return; }
+        if (!data.length) { el.innerHTML = '<p class="text-sm text-slate-400">접수된 문의가 없습니다.</p>'; return; }
+        el.innerHTML = data.map(row => inquiryRowHtml(row)).join('');
+    }
+
+    function inquiryRowHtml(row) {
+        const typeLabel = row.type === 'quote' ? '견적문의' : '임가공';
+        const typeColor = row.type === 'quote' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700';
+        const statusOptions = ['new','contacted','done'].map(s =>
+            `<option value="${s}" ${row.status===s?'selected':''}>${s==='new'?'신규':s==='contacted'?'연락완료':'처리완료'}</option>`).join('');
+        return `
+        <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <div class="p-4 flex flex-wrap items-center gap-3 cursor-pointer" onclick="toggleInquiryDetail('${row.id}')">
+                <span class="text-[11px] font-bold px-2 py-1 rounded ${typeColor}">${typeLabel}</span>
+                <span class="font-bold text-slate-900 text-sm">${esc(row.company)}</span>
+                <span class="text-xs text-slate-500">${esc(row.contact_name)} · ${esc(row.phone)}</span>
+                ${row.product_context ? `<span class="text-xs text-slate-400">(${esc(row.product_context)})</span>` : ''}
+                <span class="text-xs text-slate-400 ml-auto">${fmtDate(row.created_at)}</span>
+                <select onclick="event.stopPropagation()" onchange="updateInquiryStatus('${row.id}', this.value)" class="text-xs font-bold border border-slate-200 rounded px-2 py-1.5">
+                    ${statusOptions}
+                </select>
+                <button onclick="event.stopPropagation(); deleteInquiry('${row.id}')" class="text-slate-300 hover:text-red-600 text-sm"><i class="fa-solid fa-trash"></i></button>
+            </div>
+            <div id="detail-${row.id}" class="hidden border-t border-slate-100 p-4 bg-slate-50 text-sm text-slate-700 space-y-1">
+                ${row.email ? `<p><b class="text-slate-500 font-semibold">이메일:</b> ${esc(row.email)}</p>` : ''}
+                ${row.product_size ? `<p><b class="text-slate-500 font-semibold">제품 사이즈:</b> ${esc(row.product_size)}</p>` : ''}
+                ${row.process_method ? `<p><b class="text-slate-500 font-semibold">처리방법:</b> ${esc(row.process_method)}</p>` : ''}
+                ${row.daily_qty ? `<p><b class="text-slate-500 font-semibold">하루 생산량:</b> ${esc(row.daily_qty)}</p>` : ''}
+                ${row.processing_qty ? `<p><b class="text-slate-500 font-semibold">임가공 수량:</b> ${esc(row.processing_qty)}</p>` : ''}
+                ${row.message ? `<p><b class="text-slate-500 font-semibold">문의사항:</b> ${esc(row.message)}</p>` : ''}
+                ${row.file_url ? `<p><button class="text-red-700 font-bold hover:underline" onclick="event.stopPropagation(); openInquiryFile('${row.file_url}')">첨부파일 열기</button></p>` : ''}
+            </div>
+        </div>`;
+    }
+
+    function toggleInquiryDetail(id) {
+        document.getElementById('detail-' + id).classList.toggle('hidden');
+    }
+    async function updateInquiryStatus(id, status) {
+        await sb.from('inquiries').update({ status }).eq('id', id);
+    }
+    async function deleteInquiry(id) {
+        if (!confirm('이 문의를 삭제하시겠습니까?')) return;
+        await sb.from('inquiries').delete().eq('id', id);
+        loadInquiries();
+    }
+    async function openInquiryFile(path) {
+        const { data, error } = await sb.storage.from('inquiry-files').createSignedUrl(path, 3600);
+        if (error) { alert('파일을 여는 중 오류가 발생했습니다.'); return; }
+        window.open(data.signedUrl, '_blank');
+    }
+
+    /* ===================== 공지사항 ===================== */
+    async function loadNotices() {
+        const el = document.getElementById('noticesList');
+        el.innerHTML = '<p class="text-sm text-slate-400">불러오는 중...</p>';
+        const { data, error } = await sb.from('notices').select('*').order('sort_order', { ascending: true });
+        if (error) { el.innerHTML = `<p class="text-sm text-red-600">${esc(error.message)}</p>`; return; }
+        if (!data.length) { el.innerHTML = '<p class="text-sm text-slate-400">등록된 공지사항이 없습니다.</p>'; return; }
+        el.innerHTML = data.map(row => `
+            <div class="bg-white p-4 rounded-lg border border-slate-200 flex items-center gap-3">
+                <span class="flex-1 text-sm font-semibold text-slate-800">${esc(row.title)}</span>
+                <span class="text-xs text-slate-400">${esc(row.date_label || '')}</span>
+                <button onclick="deleteNotice('${row.id}')" class="text-slate-300 hover:text-red-600 text-sm"><i class="fa-solid fa-trash"></i></button>
+            </div>`).join('');
+    }
+    async function createNotice(e) {
+        e.preventDefault();
+        const title = document.getElementById('noticeTitleInput').value.trim();
+        const date_label = document.getElementById('noticeDateInput').value.trim();
+        if (!title) return;
+        const { data } = await sb.from('notices').select('sort_order').order('sort_order', { ascending: false }).limit(1);
+        const nextOrder = data && data.length ? data[0].sort_order + 1 : 1;
+        const { error } = await sb.from('notices').insert({ title, date_label, sort_order: nextOrder });
+        if (error) { alert(error.message); return; }
+        e.target.reset();
+        loadNotices();
+    }
+    async function deleteNotice(id) {
+        if (!confirm('이 공지사항을 삭제하시겠습니까?')) return;
+        await sb.from('notices').delete().eq('id', id);
+        loadNotices();
+    }
+
+    /* ===================== 중고장비 ===================== */
+    async function loadUsedEquipment() {
+        const el = document.getElementById('usedList');
+        el.innerHTML = '<p class="text-sm text-slate-400">불러오는 중...</p>';
+        const { data, error } = await sb.from('used_equipment').select('*').order('sort_order', { ascending: true });
+        if (error) { el.innerHTML = `<p class="text-sm text-red-600">${esc(error.message)}</p>`; return; }
+        if (!data.length) { el.innerHTML = '<p class="text-sm text-slate-400">등록된 매물이 없습니다.</p>'; return; }
+        el.innerHTML = data.map(row => `
+            <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+                <div class="h-32 bg-slate-100 flex items-center justify-center overflow-hidden">
+                    ${row.image_url ? `<img src="${esc(row.image_url)}" class="w-full h-full object-cover">` : '<i class="fa-solid fa-image text-2xl text-slate-300"></i>'}
+                </div>
+                <div class="p-4">
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="text-[11px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-700">${esc(row.status)}</span>
+                        <button onclick="deleteUsedEquipment('${row.id}')" class="text-slate-300 hover:text-red-600 text-sm"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                    <h4 class="font-bold text-slate-900 text-sm">${esc(row.title)} ${row.listing_no ? `<span class="text-slate-400 font-normal">(${esc(row.listing_no)})</span>` : ''}</h4>
+                    <p class="text-xs text-slate-500 mt-1">${esc(row.description || '')}</p>
+                </div>
+            </div>`).join('');
+    }
+    async function createUsedEquipment(e) {
+        e.preventDefault();
+        const title = document.getElementById('ueTitleInput').value.trim();
+        if (!title) return;
+        const btn = e.target.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        try {
+            let image_url = null;
+            const file = document.getElementById('ueImageInput').files[0];
+            if (file) {
+                const path = `used-equipment/${Date.now()}_${file.name}`;
+                const { error: upErr } = await sb.storage.from('site-images').upload(path, file);
+                if (!upErr) image_url = sb.storage.from('site-images').getPublicUrl(path).data.publicUrl;
+            }
+            const { data } = await sb.from('used_equipment').select('sort_order').order('sort_order', { ascending: false }).limit(1);
+            const nextOrder = data && data.length ? data[0].sort_order + 1 : 1;
+            const { error } = await sb.from('used_equipment').insert({
+                title,
+                listing_no: document.getElementById('ueListingNoInput').value.trim(),
+                status: document.getElementById('ueStatusInput').value,
+                description: document.getElementById('ueDescInput').value.trim(),
+                image_url,
+                sort_order: nextOrder
+            });
+            if (error) { alert(error.message); return; }
+            e.target.reset();
+            loadUsedEquipment();
+        } finally {
+            btn.disabled = false;
+        }
+    }
+    async function deleteUsedEquipment(id) {
+        if (!confirm('이 매물을 삭제하시겠습니까?')) return;
+        await sb.from('used_equipment').delete().eq('id', id);
+        loadUsedEquipment();
+    }
+
+    /* ===================== 신규 제품 추가 ===================== */
+    let productsCache = [];
+    let currentProductImageUrl = null;
+
+    async function loadProducts() {
+        const el = document.getElementById('productsList');
+        el.innerHTML = '<p class="text-sm text-slate-400">불러오는 중...</p>';
+        const { data, error } = await sb.from('products_extra').select('*').order('created_at', { ascending: false });
+        if (error) { el.innerHTML = `<p class="text-sm text-red-600">${esc(error.message)}</p>`; return; }
+        productsCache = data || [];
+        if (!data.length) { el.innerHTML = '<p class="text-sm text-slate-400">추가된 제품이 없습니다.</p>'; return; }
+        const sectionLabel = { products: '제품소개', abrasives: '연마재', consumables: '소모품' };
+        el.innerHTML = data.map(row => `
+            <div class="bg-white rounded-xl border border-slate-200 overflow-hidden ${row.active ? '' : 'opacity-50'}">
+                <div class="h-32 bg-slate-100 flex items-center justify-center overflow-hidden">
+                    ${row.thumb_url ? `<img src="${esc(row.thumb_url)}" class="max-h-full max-w-full object-contain">` : '<i class="fa-solid fa-image text-2xl text-slate-300"></i>'}
+                </div>
+                <div class="p-4">
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="text-[11px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600">${sectionLabel[row.section] || row.section}${row.category ? ' · ' + esc(row.category) : ''}</span>
+                        <div class="flex gap-2">
+                            <button onclick="editProduct('${row.id}')" class="text-slate-300 hover:text-red-700 text-sm"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteProduct('${row.id}')" class="text-slate-300 hover:text-red-600 text-sm"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                    <h4 class="font-bold text-slate-900 text-sm">${esc(row.name)}</h4>
+                    <p class="text-xs text-slate-500 mt-1 line-clamp-2">${esc(row.short_desc || '')}</p>
+                    ${!row.active ? '<p class="text-[11px] text-amber-600 font-bold mt-1">비노출 상태</p>' : ''}
+                </div>
+            </div>`).join('');
+    }
+
+    function parseSpecsText(text) {
+        return text.split('\n').map(l => l.trim()).filter(Boolean).map(line => {
+            const idx = line.indexOf(':');
+            if (idx === -1) return { label: line, value: '' };
+            return { label: line.slice(0, idx).trim(), value: line.slice(idx + 1).trim() };
+        });
+    }
+    function specsToText(specs) {
+        return (specs || []).map(s => `${s.label}: ${s.value}`).join('\n');
+    }
+
+    function editProduct(id) {
+        const row = productsCache.find(p => p.id === id);
+        if (!row) return;
+        document.getElementById('prodEditId').value = row.id;
+        document.getElementById('prodSectionInput').value = row.section;
+        document.getElementById('prodCategoryInput').value = row.category || '';
+        document.getElementById('prodNameInput').value = row.name;
+        document.getElementById('prodShortDescInput').value = row.short_desc || '';
+        document.getElementById('prodSpecsInput').value = specsToText(row.specs);
+        document.getElementById('prodFullDescInput').value = row.full_desc || '';
+        document.getElementById('prodActiveInput').checked = row.active;
+        currentProductImageUrl = row.thumb_url;
+        document.getElementById('prodSubmitBtn').textContent = '수정 저장';
+        document.getElementById('prodCancelBtn').classList.remove('hidden');
+        window.scrollTo({ top: document.getElementById('tab-products').offsetTop - 20, behavior: 'smooth' });
+    }
+    function cancelProductEdit() {
+        document.getElementById('prodEditId').value = '';
+        document.querySelector('#tab-products form').reset();
+        currentProductImageUrl = null;
+        document.getElementById('prodSubmitBtn').textContent = '제품 추가';
+        document.getElementById('prodCancelBtn').classList.add('hidden');
+    }
+
+    async function submitProduct(e) {
+        e.preventDefault();
+        const btn = document.getElementById('prodSubmitBtn');
+        btn.disabled = true;
+        try {
+            const editId = document.getElementById('prodEditId').value;
+            let thumb_url = editId ? currentProductImageUrl : null;
+            const file = document.getElementById('prodImageInput').files[0];
+            if (file) {
+                const path = `products/${Date.now()}_${file.name}`;
+                const { error: upErr } = await sb.storage.from('site-images').upload(path, file);
+                if (!upErr) thumb_url = sb.storage.from('site-images').getPublicUrl(path).data.publicUrl;
+            }
+            const payload = {
+                section: document.getElementById('prodSectionInput').value,
+                category: document.getElementById('prodCategoryInput').value.trim(),
+                name: document.getElementById('prodNameInput').value.trim(),
+                short_desc: document.getElementById('prodShortDescInput').value.trim(),
+                specs: parseSpecsText(document.getElementById('prodSpecsInput').value),
+                full_desc: document.getElementById('prodFullDescInput').value.trim(),
+                active: document.getElementById('prodActiveInput').checked,
+                thumb_url
+            };
+            let error;
+            if (editId) {
+                ({ error } = await sb.from('products_extra').update(payload).eq('id', editId));
+            } else {
+                ({ error } = await sb.from('products_extra').insert(payload));
+            }
+            if (error) { alert(error.message); return; }
+            cancelProductEdit();
+            loadProducts();
+        } finally {
+            btn.disabled = false;
+        }
+    }
+    async function deleteProduct(id) {
+        if (!confirm('이 제품을 삭제하시겠습니까?')) return;
+        await sb.from('products_extra').delete().eq('id', id);
+        loadProducts();
+    }
+
+    init();
+</script>
+</body>
+</html>
