@@ -80,7 +80,7 @@
                 <button onclick="switchTab('inquiries')" class="admin-tab tab-btn px-4 py-2.5 rounded text-sm font-bold bg-white border border-slate-200 transition" data-tab="inquiries">문의 접수 내역</button>
                 <button onclick="switchTab('notices')" class="admin-tab tab-btn px-4 py-2.5 rounded text-sm font-bold bg-white border border-slate-200 transition" data-tab="notices">공지사항</button>
                 <button onclick="switchTab('used')" class="admin-tab tab-btn px-4 py-2.5 rounded text-sm font-bold bg-white border border-slate-200 transition" data-tab="used">중고장비 매물</button>
-                <button onclick="switchTab('products')" class="admin-tab tab-btn px-4 py-2.5 rounded text-sm font-bold bg-white border border-slate-200 transition" data-tab="products">신규 제품 추가</button>
+                <button onclick="switchTab('products')" class="admin-tab tab-btn px-4 py-2.5 rounded text-sm font-bold bg-white border border-slate-200 transition" data-tab="products">제품 관리</button>
             </div>
 
             <!-- 문의 접수 내역 -->
@@ -144,29 +144,33 @@
                 <div id="usedList" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
             </section>
 
-            <!-- 신규 제품 추가 -->
+            <!-- 제품/소모품/연마재 -->
             <section id="tab-products" class="tab-panel">
-                <h2 class="font-bold text-slate-900 text-lg mb-1">신규 제품 추가</h2>
-                <p class="text-slate-500 text-xs mb-4">기존 263개 제품/소모품/연마재는 코드에 고정되어 있어 여기서 수정되지 않습니다. 여기서 추가한 항목은 각 페이지 하단 "신규 등록 제품" 영역에 표시됩니다.</p>
+                <h2 class="font-bold text-slate-900 text-lg mb-1">제품 · 소모품 · 연마재 관리</h2>
+                <p class="text-slate-500 text-xs mb-4">기존 262개 항목과 새로 추가하는 항목 모두 여기서 관리합니다. 저장 즉시 사이트에 반영됩니다.</p>
                 <form onsubmit="submitProduct(event)" class="bg-white p-5 rounded-xl border border-slate-200 mb-6 space-y-3">
                     <input type="hidden" id="prodEditId" value="">
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1">구분 *</label>
-                            <select id="prodSectionInput" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2.5 text-sm focus:outline-none focus:border-red-700">
+                            <select id="prodSectionInput" onchange="onProductSectionChange()" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2.5 text-sm focus:outline-none focus:border-red-700">
                                 <option value="products">제품소개</option>
                                 <option value="abrasives">연마재</option>
                                 <option value="consumables">소모품</option>
                             </select>
                         </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">카테고리</label>
-                            <input id="prodCategoryInput" placeholder="예: 흡입식 샌딩기" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2.5 text-sm focus:outline-none focus:border-red-700">
+                        <div id="prodCategoryWrap">
+                            <label class="block text-xs font-bold text-slate-700 mb-1">카테고리 *</label>
+                            <select id="prodCategoryInput" onchange="onProductCategoryChange()" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2.5 text-sm focus:outline-none focus:border-red-700"></select>
                         </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">제품명 *</label>
-                            <input id="prodNameInput" required class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2.5 text-sm focus:outline-none focus:border-red-700">
+                        <div id="prodSubcategoryWrap" class="hidden">
+                            <label class="block text-xs font-bold text-slate-700 mb-1">세부 카테고리</label>
+                            <select id="prodSubcategoryInput" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2.5 text-sm focus:outline-none focus:border-red-700"></select>
                         </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">제품명 *</label>
+                        <input id="prodNameInput" required class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2.5 text-sm focus:outline-none focus:border-red-700">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">요약 설명 (카드에 표시)</label>
@@ -178,8 +182,14 @@
                         <p class="text-[11px] text-slate-400 mt-1">수정 시 비워두면 기존 사진이 유지됩니다.</p>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">상세 규격 (한 줄에 하나씩, "항목: 내용" 형식)</label>
-                        <textarea id="prodSpecsInput" rows="4" placeholder="분사방식: Suction(흡입식)&#10;전체크기: 590W x 750D x 1,230H" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2.5 text-sm font-mono focus:outline-none focus:border-red-700"></textarea>
+                        <div class="flex items-center justify-between mb-1">
+                            <label class="block text-xs font-bold text-slate-700">상세 규격</label>
+                            <label class="flex items-center gap-1.5 text-[11px] text-slate-500">
+                                <input type="checkbox" id="prodSpecsHtmlMode" onchange="toggleSpecsMode()" class="w-3.5 h-3.5"> 고급: HTML 직접 입력
+                            </label>
+                        </div>
+                        <p id="prodSpecsHint" class="text-[11px] text-slate-400 mb-1">한 줄에 하나씩, "항목: 내용" 형식으로 입력하세요.</p>
+                        <textarea id="prodSpecsInput" rows="5" placeholder="분사방식: Suction(흡입식)&#10;전체크기: 590W x 750D x 1,230H" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2.5 text-sm font-mono focus:outline-none focus:border-red-700"></textarea>
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">상세 설명</label>
@@ -193,6 +203,17 @@
                         <button type="button" id="prodCancelBtn" onclick="cancelProductEdit()" class="hidden bg-slate-200 hover:bg-slate-300 text-slate-700 px-5 py-2.5 rounded font-bold text-sm transition">수정 취소</button>
                     </div>
                 </form>
+
+                <div class="flex flex-wrap items-center gap-2 mb-4">
+                    <select id="prodFilterSection" onchange="renderProductsList()" class="bg-white border border-slate-200 rounded px-3 py-2 text-xs font-bold">
+                        <option value="">전체 구분</option>
+                        <option value="products">제품소개</option>
+                        <option value="abrasives">연마재</option>
+                        <option value="consumables">소모품</option>
+                    </select>
+                    <input id="prodFilterSearch" oninput="renderProductsList()" placeholder="제품명 검색..." class="bg-white border border-slate-200 rounded px-3 py-2 text-xs flex-1 min-w-[160px]">
+                    <span id="prodFilterCount" class="text-xs text-slate-400"></span>
+                </div>
                 <div id="productsList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
             </section>
         </main>
@@ -475,26 +496,142 @@
         loadUsedEquipment();
     }
 
-    /* ===================== 신규 제품 추가 ===================== */
+    /* ===================== 제품 · 소모품 · 연마재 ===================== */
+    const PRODUCT_TAXONOMY = {
+        suction: { label: '흡입식 샌딩기', subs: { myseries: 'MY-SERIES', manual: '수동장비', cart: '대차장비(수동/자동)', conveyor: '컨베어 장비', index: '인덱스 장비', apron: '에프론 장비', basket: '바스켓 장비' } },
+        pressure: { label: '직압식 샌딩기', subs: { manual: '수동장비', cart: '대차 장비', conveyor: '컨베어 장비' } },
+        portable: { label: '이동식 장비', subs: null },
+        shotroom: { label: '쇼트룸', subs: null },
+        soundroom: { label: '방음룸', subs: null },
+        robot: { label: 'ROBOT BLASTER', subs: null },
+        wet: { label: 'WET BLASTER', subs: null },
+        collector: { label: '집진기', subs: { dry: '건식 집진기', wet: '습식 집진기' } },
+        micro: { label: 'MICRO BLASTER', subs: null },
+        peening: { label: 'PEENING M/C', subs: null },
+    };
+    const CONSUMABLES_TAXONOMY = {
+        gun: '샌딩건', nozzle: '노즐 & 부속품', hose: '호스 & 커플러', valve: '밸브 & 부속품',
+        filter: '필터', glove: '샌딩장갑', packing: '패킹 & 실링', lamp: '챔버 조명', etc: '기타 부속품',
+    };
+
+    function onProductSectionChange() {
+        const section = document.getElementById('prodSectionInput').value;
+        const catWrap = document.getElementById('prodCategoryWrap');
+        const catSelect = document.getElementById('prodCategoryInput');
+        catSelect.innerHTML = '';
+        if (section === 'products') {
+            catWrap.classList.remove('hidden');
+            Object.entries(PRODUCT_TAXONOMY).forEach(([id, meta]) => {
+                catSelect.insertAdjacentHTML('beforeend', `<option value="${id}">${esc(meta.label)}</option>`);
+            });
+        } else if (section === 'consumables') {
+            catWrap.classList.remove('hidden');
+            Object.entries(CONSUMABLES_TAXONOMY).forEach(([id, label]) => {
+                catSelect.insertAdjacentHTML('beforeend', `<option value="${id}">${esc(label)}</option>`);
+            });
+        } else {
+            catWrap.classList.add('hidden');
+        }
+        onProductCategoryChange();
+    }
+
+    function onProductCategoryChange() {
+        const section = document.getElementById('prodSectionInput').value;
+        const subWrap = document.getElementById('prodSubcategoryWrap');
+        const subSelect = document.getElementById('prodSubcategoryInput');
+        subSelect.innerHTML = '';
+        if (section !== 'products') { subWrap.classList.add('hidden'); return; }
+        const meta = PRODUCT_TAXONOMY[document.getElementById('prodCategoryInput').value];
+        if (meta && meta.subs) {
+            subWrap.classList.remove('hidden');
+            Object.entries(meta.subs).forEach(([id, label]) => {
+                subSelect.insertAdjacentHTML('beforeend', `<option value="${id}">${esc(label)}</option>`);
+            });
+        } else {
+            subWrap.classList.add('hidden');
+        }
+    }
+
+    function categoryDisplayLabel(row) {
+        if (row.section === 'products') {
+            const meta = PRODUCT_TAXONOMY[row.category];
+            const catLabel = meta ? meta.label : row.category;
+            const subLabel = (meta && meta.subs && row.subcategory) ? meta.subs[row.subcategory] : null;
+            return catLabel + (subLabel ? ' · ' + subLabel : '');
+        }
+        if (row.section === 'consumables') return CONSUMABLES_TAXONOMY[row.category] || row.category;
+        return '';
+    }
+
+    function toggleSpecsMode() {
+        const isHtml = document.getElementById('prodSpecsHtmlMode').checked;
+        document.getElementById('prodSpecsHint').textContent = isHtml
+            ? '원본 HTML을 직접 입력/수정합니다. 태그 구조에 유의하세요.'
+            : '한 줄에 하나씩, "항목: 내용" 형식으로 입력하세요.';
+    }
+
+    function specsTextToHtml(text) {
+        const rows = text.split('\n').map(l => l.trim()).filter(Boolean).map(line => {
+            const idx = line.indexOf(':');
+            const label = idx === -1 ? line : line.slice(0, idx).trim();
+            const value = idx === -1 ? '' : line.slice(idx + 1).trim();
+            return `<tr><th class="w-28 sm:w-40 py-2 pr-3 text-slate-500 font-semibold align-top text-xs sm:text-sm whitespace-nowrap">${esc(label)}</th><td class="py-2 text-slate-800 text-xs sm:text-sm">${esc(value)}</td></tr>`;
+        }).join('');
+        return `<table class="w-full text-left border-t border-slate-200"><tbody class="divide-y divide-slate-200">${rows}</tbody></table>`;
+    }
+
+    function htmlToSpecsText(html) {
+        if (!html) return { mode: 'simple', text: '' };
+        const div = document.createElement('div');
+        div.innerHTML = html;
+        const tables = div.querySelectorAll('table');
+        const hasBr = div.querySelector('br') !== null;
+        const hasNestedDiv = div.querySelector('div') !== null;
+        if (tables.length === 1 && !hasBr && !hasNestedDiv) {
+            const rows = [...tables[0].querySelectorAll('tr')].map(tr => {
+                const th = tr.querySelector('th'), td = tr.querySelector('td');
+                if (!th || !td) return null;
+                return `${th.textContent.trim()}: ${td.textContent.trim()}`;
+            });
+            if (rows.length && rows.every(r => r !== null)) return { mode: 'simple', text: rows.join('\n') };
+        }
+        return { mode: 'html', text: html };
+    }
+
     let productsCache = [];
     let currentProductImageUrl = null;
 
     async function loadProducts() {
         const el = document.getElementById('productsList');
         el.innerHTML = '<p class="text-sm text-slate-400">불러오는 중...</p>';
-        const { data, error } = await sb.from('products_extra').select('*').order('created_at', { ascending: false });
+        const { data, error } = await sb.from('products').select('*')
+            .order('section', { ascending: true }).order('category', { ascending: true })
+            .order('subcategory', { ascending: true }).order('sort_order', { ascending: true });
         if (error) { el.innerHTML = `<p class="text-sm text-red-600">${esc(error.message)}</p>`; return; }
         productsCache = data || [];
-        if (!data.length) { el.innerHTML = '<p class="text-sm text-slate-400">추가된 제품이 없습니다.</p>'; return; }
+        renderProductsList();
+    }
+
+    function renderProductsList() {
+        const el = document.getElementById('productsList');
         const sectionLabel = { products: '제품소개', abrasives: '연마재', consumables: '소모품' };
-        el.innerHTML = data.map(row => `
+        const filterSection = document.getElementById('prodFilterSection').value;
+        const search = document.getElementById('prodFilterSearch').value.trim().toLowerCase();
+        let rows = productsCache;
+        if (filterSection) rows = rows.filter(r => r.section === filterSection);
+        if (search) rows = rows.filter(r => r.name.toLowerCase().includes(search));
+        document.getElementById('prodFilterCount').textContent = `${rows.length}개 / 전체 ${productsCache.length}개`;
+        if (!rows.length) { el.innerHTML = '<p class="text-sm text-slate-400">해당하는 제품이 없습니다.</p>'; return; }
+        el.innerHTML = rows.map(row => {
+            const catLabel = categoryDisplayLabel(row);
+            return `
             <div class="bg-white rounded-xl border border-slate-200 overflow-hidden ${row.active ? '' : 'opacity-50'}">
                 <div class="h-32 bg-slate-100 flex items-center justify-center overflow-hidden">
                     ${row.thumb_url ? `<img src="${esc(row.thumb_url)}" class="max-h-full max-w-full object-contain">` : '<i class="fa-solid fa-image text-2xl text-slate-300"></i>'}
                 </div>
                 <div class="p-4">
                     <div class="flex items-center justify-between mb-1">
-                        <span class="text-[11px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600">${sectionLabel[row.section] || row.section}${row.category ? ' · ' + esc(row.category) : ''}</span>
+                        <span class="text-[11px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600">${sectionLabel[row.section] || row.section}${catLabel ? ' · ' + esc(catLabel) : ''}</span>
                         <div class="flex gap-2">
                             <button onclick="editProduct('${row.id}')" class="text-slate-300 hover:text-red-700 text-sm"><i class="fa-solid fa-pen"></i></button>
                             <button onclick="deleteProduct('${row.id}')" class="text-slate-300 hover:text-red-600 text-sm"><i class="fa-solid fa-trash"></i></button>
@@ -504,18 +641,8 @@
                     <p class="text-xs text-slate-500 mt-1 line-clamp-2">${esc(row.short_desc || '')}</p>
                     ${!row.active ? '<p class="text-[11px] text-amber-600 font-bold mt-1">비노출 상태</p>' : ''}
                 </div>
-            </div>`).join('');
-    }
-
-    function parseSpecsText(text) {
-        return text.split('\n').map(l => l.trim()).filter(Boolean).map(line => {
-            const idx = line.indexOf(':');
-            if (idx === -1) return { label: line, value: '' };
-            return { label: line.slice(0, idx).trim(), value: line.slice(idx + 1).trim() };
-        });
-    }
-    function specsToText(specs) {
-        return (specs || []).map(s => `${s.label}: ${s.value}`).join('\n');
+            </div>`;
+        }).join('');
     }
 
     function editProduct(id) {
@@ -523,10 +650,16 @@
         if (!row) return;
         document.getElementById('prodEditId').value = row.id;
         document.getElementById('prodSectionInput').value = row.section;
+        onProductSectionChange();
         document.getElementById('prodCategoryInput').value = row.category || '';
+        onProductCategoryChange();
+        document.getElementById('prodSubcategoryInput').value = row.subcategory || '';
         document.getElementById('prodNameInput').value = row.name;
         document.getElementById('prodShortDescInput').value = row.short_desc || '';
-        document.getElementById('prodSpecsInput').value = specsToText(row.specs);
+        const parsed = htmlToSpecsText(row.specs_html);
+        document.getElementById('prodSpecsHtmlMode').checked = parsed.mode === 'html';
+        document.getElementById('prodSpecsInput').value = parsed.text;
+        toggleSpecsMode();
         document.getElementById('prodFullDescInput').value = row.full_desc || '';
         document.getElementById('prodActiveInput').checked = row.active;
         currentProductImageUrl = row.thumb_url;
@@ -537,6 +670,9 @@
     function cancelProductEdit() {
         document.getElementById('prodEditId').value = '';
         document.querySelector('#tab-products form').reset();
+        onProductSectionChange();
+        document.getElementById('prodSpecsHtmlMode').checked = false;
+        toggleSpecsMode();
         currentProductImageUrl = null;
         document.getElementById('prodSubmitBtn').textContent = '제품 추가';
         document.getElementById('prodCancelBtn').classList.add('hidden');
@@ -555,21 +691,35 @@
                 const { error: upErr } = await sb.storage.from('site-images').upload(path, file);
                 if (!upErr) thumb_url = sb.storage.from('site-images').getPublicUrl(path).data.publicUrl;
             }
+            const section = document.getElementById('prodSectionInput').value;
+            const category = section === 'abrasives' ? null : document.getElementById('prodCategoryInput').value;
+            const subWrap = document.getElementById('prodSubcategoryWrap');
+            const subcategory = (section === 'products' && !subWrap.classList.contains('hidden'))
+                ? document.getElementById('prodSubcategoryInput').value : null;
+            const isHtmlMode = document.getElementById('prodSpecsHtmlMode').checked;
+            const specsText = document.getElementById('prodSpecsInput').value;
+            const specs_html = isHtmlMode ? specsText : specsTextToHtml(specsText);
+
             const payload = {
-                section: document.getElementById('prodSectionInput').value,
-                category: document.getElementById('prodCategoryInput').value.trim(),
+                section, category, subcategory,
                 name: document.getElementById('prodNameInput').value.trim(),
                 short_desc: document.getElementById('prodShortDescInput').value.trim(),
-                specs: parseSpecsText(document.getElementById('prodSpecsInput').value),
+                specs_html,
                 full_desc: document.getElementById('prodFullDescInput').value.trim(),
                 active: document.getElementById('prodActiveInput').checked,
-                thumb_url
+                thumb_url,
             };
+
             let error;
             if (editId) {
-                ({ error } = await sb.from('products_extra').update(payload).eq('id', editId));
+                ({ error } = await sb.from('products').update(payload).eq('id', editId));
             } else {
-                ({ error } = await sb.from('products_extra').insert(payload));
+                let q = sb.from('products').select('sort_order').eq('section', section).order('sort_order', { ascending: false }).limit(1);
+                q = category ? q.eq('category', category) : q.is('category', null);
+                q = subcategory ? q.eq('subcategory', subcategory) : q.is('subcategory', null);
+                const { data: last } = await q;
+                payload.sort_order = (last && last.length) ? last[0].sort_order + 1 : 0;
+                ({ error } = await sb.from('products').insert(payload));
             }
             if (error) { alert(error.message); return; }
             cancelProductEdit();
@@ -580,10 +730,11 @@
     }
     async function deleteProduct(id) {
         if (!confirm('이 제품을 삭제하시겠습니까?')) return;
-        await sb.from('products_extra').delete().eq('id', id);
+        await sb.from('products').delete().eq('id', id);
         loadProducts();
     }
 
+    onProductSectionChange();
     init();
 </script>
 </body>
