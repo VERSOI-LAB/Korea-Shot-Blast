@@ -27,7 +27,7 @@
         <!-- 메인 네비게이션 -->
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <a href="#" onclick="switchPage('home')" class="flex items-center cursor-pointer">
-                <img src="logo.gif" alt="한국브라스트 로고" class="h-8 object-contain">
+                <img src="logo.gif" alt="한국브라스트 로고" class="h-6 sm:h-8 object-contain">
             </a>
             <nav class="hidden xl:flex items-center gap-8 font-semibold text-sm text-slate-800">
                 <button onclick="switchPage('about')" class="nav-link hover:text-red-700 transition py-2" data-nav="about">회사소개</button>
@@ -38,10 +38,22 @@
                 <button onclick="switchPage('tech')" class="nav-link hover:text-red-700 transition py-2" data-nav="tech">기술자료</button>
                 <button onclick="switchPage('support')" class="nav-link hover:text-red-700 transition py-2" data-nav="support">고객지원</button>
             </nav>
-            <div>
-                <button onclick="openModal('quoteModal')" class="bg-red-700 hover:bg-red-800 text-white px-5 py-2.5 rounded font-bold text-xs uppercase tracking-wider transition shadow">빠른 견적문의</button>
+            <div class="flex items-center gap-2">
+                <button onclick="openModal('quoteModal')" class="bg-red-700 hover:bg-red-800 text-white px-2.5 sm:px-5 py-2.5 rounded font-bold text-xs uppercase tracking-wider transition shadow whitespace-nowrap"><span class="hidden sm:inline">빠른 </span>견적문의</button>
+                <button onclick="toggleMobileMenu()" id="mobileMenuBtn" aria-label="메뉴 열기" class="xl:hidden text-slate-800 text-xl w-10 h-10 flex items-center justify-center rounded hover:bg-slate-100 transition">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
             </div>
         </div>
+        <nav id="mobileNav" class="xl:hidden hidden flex-col border-t border-slate-200 bg-white font-semibold text-sm text-slate-800 divide-y divide-slate-100">
+            <button onclick="switchPage('about'); closeMobileMenu();" class="nav-link text-left px-4 sm:px-6 py-3.5 hover:bg-slate-50 hover:text-red-700 transition" data-nav="about">회사소개</button>
+            <button onclick="switchPage('products'); closeMobileMenu();" class="nav-link text-left px-4 sm:px-6 py-3.5 hover:bg-slate-50 hover:text-red-700 transition" data-nav="products">제품소개</button>
+            <button onclick="switchPage('abrasives'); closeMobileMenu();" class="nav-link text-left px-4 sm:px-6 py-3.5 hover:bg-slate-50 hover:text-red-700 transition" data-nav="abrasives">연마재</button>
+            <button onclick="switchPage('consumables'); closeMobileMenu();" class="nav-link text-left px-4 sm:px-6 py-3.5 hover:bg-slate-50 hover:text-red-700 transition" data-nav="consumables">소모품</button>
+            <button onclick="switchPage('processing'); closeMobileMenu();" class="nav-link text-left px-4 sm:px-6 py-3.5 hover:bg-slate-50 hover:text-red-700 transition" data-nav="processing">임가공</button>
+            <button onclick="switchPage('tech'); closeMobileMenu();" class="nav-link text-left px-4 sm:px-6 py-3.5 hover:bg-slate-50 hover:text-red-700 transition" data-nav="tech">기술자료</button>
+            <button onclick="switchPage('support'); closeMobileMenu();" class="nav-link text-left px-4 sm:px-6 py-3.5 hover:bg-slate-50 hover:text-red-700 transition" data-nav="support">고객지원</button>
+        </nav>
     </header>
 
     <!-- Main Container -->
@@ -143,17 +155,17 @@
                     <p class="text-slate-500 text-sm">BLAST의 핵심 기술 및 주력 사업 분야를 소개합니다.</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-slate-50 p-8 rounded-2xl border border-slate-200">
+                    <div class="bg-slate-50 p-4 sm:p-8 rounded-2xl border border-slate-200">
                         <div class="w-10 h-10 bg-red-700 text-white rounded flex items-center justify-center font-bold text-lg mb-4"><i class="fa-solid fa-microchip"></i></div>
                         <h3 class="text-lg font-bold text-slate-900 mb-2">초정밀 제어 기술</h3>
                         <p class="text-slate-600 text-sm leading-relaxed">미세한 오차도 허용하지 않는 반도체 및 전자 부품 전용 마이크로 피닝·샌딩 시스템</p>
                     </div>
-                    <div class="bg-slate-50 p-8 rounded-2xl border border-slate-200">
+                    <div class="bg-slate-50 p-4 sm:p-8 rounded-2xl border border-slate-200">
                         <div class="w-10 h-10 bg-red-700 text-white rounded flex items-center justify-center font-bold text-lg mb-4"><i class="fa-solid fa-bolt"></i></div>
                         <h3 class="text-lg font-bold text-slate-900 mb-2">고효율 자동화 공정</h3>
                         <p class="text-slate-600 text-sm leading-relaxed">스마트 팩토리 연동형 컨베어 및 인덱스 장비로 생산 극대화 및 원가 절감 실현</p>
                     </div>
-                    <div class="bg-slate-50 p-8 rounded-2xl border border-slate-200">
+                    <div class="bg-slate-50 p-4 sm:p-8 rounded-2xl border border-slate-200">
                         <div class="w-10 h-10 bg-red-700 text-white rounded flex items-center justify-center font-bold text-lg mb-4"><i class="fa-solid fa-shield-halved"></i></div>
                         <h3 class="text-lg font-bold text-slate-900 mb-2">철저한 기술 지원 & A/S</h3>
                         <p class="text-slate-600 text-sm leading-relaxed">전국 단위 신속 대응 인프라와 정품 소모품 상시 공급으로 무중단 가동 보장</p>
@@ -227,7 +239,7 @@
                     <button onclick="switchSubTab('about', 'org')" class="about-tab px-4 py-2 rounded text-sm font-semibold text-slate-600 hover:bg-slate-100 transition" data-sub="org">조직도</button>
                     <button onclick="switchSubTab('about', 'location')" class="about-tab px-4 py-2 rounded text-sm font-semibold text-slate-600 hover:bg-slate-100 transition" data-sub="location">찾아오시는 길</button>
                 </div>
-                <div id="about-content" class="bg-slate-50 p-8 rounded-2xl border border-slate-200 min-h-[300px]">
+                <div id="about-content" class="bg-slate-50 p-4 sm:p-8 rounded-2xl border border-slate-200 min-h-[300px]">
                     <div class="sub-about-pane" id="pane-greeting">
                         <h3 class="text-2xl font-bold text-slate-900 mb-4">고객 여러분 안녕하십니까?</h3>
                         <div class="text-slate-600 text-sm leading-relaxed mb-4 space-y-4">
@@ -240,20 +252,22 @@
                     </div>
                     <div class="sub-about-pane hidden" id="pane-overview">
                         <h3 class="text-2xl font-bold text-slate-900 mb-4">회사개요</h3>
-                        <table class="w-full text-sm text-left border-t border-slate-300">
+                        <div class="overflow-x-auto">
+                        <table class="w-full text-xs sm:text-sm text-left border-t border-slate-300">
                             <tbody class="divide-y divide-slate-200">
-                                <tr><th class="w-40 py-3 pr-4 text-slate-500 font-semibold align-top">회사명</th><td class="py-3 text-slate-800">한국브라스트(주)</td></tr>
-                                <tr><th class="py-3 pr-4 text-slate-500 font-semibold align-top">대표이사</th><td class="py-3 text-slate-800">이 현 호</td></tr>
-                                <tr><th class="py-3 pr-4 text-slate-500 font-semibold align-top">설립일</th><td class="py-3 text-slate-800">1997년 12월 01일</td></tr>
-                                <tr><th class="py-3 pr-4 text-slate-500 font-semibold align-top">사업장 소재지</th><td class="py-3 text-slate-800">본사 및 공장 : 경기도 시흥시 엠티브이28로 11 (정왕동 시화 MTV 1사 907호)</td></tr>
-                                <tr><th class="py-3 pr-4 text-slate-500 font-semibold align-top">대표전화</th><td class="py-3 text-slate-800">031-488-8390~1</td></tr>
-                                <tr><th class="py-3 pr-4 text-slate-500 font-semibold align-top">FAX</th><td class="py-3 text-slate-800">031-488-8392</td></tr>
-                                <tr><th class="py-3 pr-4 text-slate-500 font-semibold align-top">이메일</th><td class="py-3 text-slate-800">blast@koreablast.com</td></tr>
-                                <tr><th class="py-3 pr-4 text-slate-500 font-semibold align-top">사업자번호</th><td class="py-3 text-slate-800">134-86-02305</td></tr>
-                                <tr><th class="py-3 pr-4 text-slate-500 font-semibold align-top">종업원수</th><td class="py-3 text-slate-800">50인 미만</td></tr>
-                                <tr><th class="py-3 pr-4 text-slate-500 font-semibold align-top">사업내용</th><td class="py-3 text-slate-800">Air Blast, Shot Blast, Peening Machine, Sanding Room, Acoustical Spray Room, Dust Collector & Filter, Blasting(Sanding) 소모품, 각종 연마재 수입 판매, 임가공 사업</td></tr>
+                                <tr><th class="w-24 sm:w-40 py-3 pr-2 sm:pr-4 text-slate-500 font-semibold align-top">회사명</th><td class="py-3 text-slate-800">한국브라스트(주)</td></tr>
+                                <tr><th class="w-24 sm:w-40 py-3 pr-2 sm:pr-4 text-slate-500 font-semibold align-top">대표이사</th><td class="py-3 text-slate-800">이 현 호</td></tr>
+                                <tr><th class="w-24 sm:w-40 py-3 pr-2 sm:pr-4 text-slate-500 font-semibold align-top">설립일</th><td class="py-3 text-slate-800">1997년 12월 01일</td></tr>
+                                <tr><th class="w-24 sm:w-40 py-3 pr-2 sm:pr-4 text-slate-500 font-semibold align-top">사업장 소재지</th><td class="py-3 text-slate-800">본사 및 공장 : 경기도 시흥시 엠티브이28로 11 (정왕동 시화 MTV 1사 907호)</td></tr>
+                                <tr><th class="w-24 sm:w-40 py-3 pr-2 sm:pr-4 text-slate-500 font-semibold align-top">대표전화</th><td class="py-3 text-slate-800">031-488-8390~1</td></tr>
+                                <tr><th class="w-24 sm:w-40 py-3 pr-2 sm:pr-4 text-slate-500 font-semibold align-top">FAX</th><td class="py-3 text-slate-800">031-488-8392</td></tr>
+                                <tr><th class="w-24 sm:w-40 py-3 pr-2 sm:pr-4 text-slate-500 font-semibold align-top">이메일</th><td class="py-3 text-slate-800">blast@koreablast.com</td></tr>
+                                <tr><th class="w-24 sm:w-40 py-3 pr-2 sm:pr-4 text-slate-500 font-semibold align-top">사업자번호</th><td class="py-3 text-slate-800">134-86-02305</td></tr>
+                                <tr><th class="w-24 sm:w-40 py-3 pr-2 sm:pr-4 text-slate-500 font-semibold align-top">종업원수</th><td class="py-3 text-slate-800">50인 미만</td></tr>
+                                <tr><th class="w-24 sm:w-40 py-3 pr-2 sm:pr-4 text-slate-500 font-semibold align-top">사업내용</th><td class="py-3 text-slate-800">Air Blast, Shot Blast, Peening Machine, Sanding Room, Acoustical Spray Room, Dust Collector & Filter, Blasting(Sanding) 소모품, 각종 연마재 수입 판매, 임가공 사업</td></tr>
                             </tbody>
                         </table>
+                        </div>
                     </div>
                     <div class="sub-about-pane hidden" id="pane-history">
                         <h3 class="text-2xl font-bold text-slate-900 mb-6">회사연혁</h3>
@@ -273,10 +287,10 @@
                     <div class="sub-about-pane hidden" id="pane-research">
                         <h3 class="text-2xl font-bold text-slate-900 mb-4">연구실적</h3>
                         <p class="text-slate-600 text-sm mb-6 leading-relaxed">한국브라스트는 창립 이후 표면처리 장비 분야에서 꾸준한 연구개발을 이어와 다수의 특허 및 실용신안, 디자인 등록을 보유하고 있습니다.</p>
-                        <div class="grid grid-cols-3 gap-4 mb-6">
-                            <div class="bg-white p-5 rounded-xl border border-slate-200 text-center"><p class="text-3xl font-black text-red-700">19</p><p class="text-xs text-slate-500 font-semibold mt-1">특허 등록</p></div>
-                            <div class="bg-white p-5 rounded-xl border border-slate-200 text-center"><p class="text-3xl font-black text-red-700">7</p><p class="text-xs text-slate-500 font-semibold mt-1">실용신안</p></div>
-                            <div class="bg-white p-5 rounded-xl border border-slate-200 text-center"><p class="text-3xl font-black text-red-700">5</p><p class="text-xs text-slate-500 font-semibold mt-1">디자인 등록</p></div>
+                        <div class="grid grid-cols-3 gap-2 sm:gap-4 mb-6">
+                            <div class="bg-white p-3 sm:p-5 rounded-xl border border-slate-200 text-center"><p class="text-xl sm:text-3xl font-black text-red-700">19</p><p class="text-[10px] sm:text-xs text-slate-500 font-semibold mt-1">특허 등록</p></div>
+                            <div class="bg-white p-3 sm:p-5 rounded-xl border border-slate-200 text-center"><p class="text-xl sm:text-3xl font-black text-red-700">7</p><p class="text-[10px] sm:text-xs text-slate-500 font-semibold mt-1">실용신안</p></div>
+                            <div class="bg-white p-3 sm:p-5 rounded-xl border border-slate-200 text-center"><p class="text-xl sm:text-3xl font-black text-red-700">5</p><p class="text-[10px] sm:text-xs text-slate-500 font-semibold mt-1">디자인 등록</p></div>
                         </div>
                         <ul class="text-sm text-slate-700 space-y-2 list-disc list-inside mb-8">
                             <li>브라스트머신을 이용한 피가공물의 증착물 제거방법 (특허 제10-1589818호)</li>
@@ -391,13 +405,15 @@
                         <div class="h-72 bg-slate-200 rounded-xl mb-6 flex items-center justify-center text-slate-500 text-sm border border-slate-300">
                             <i class="fa-solid fa-map-location-dot text-2xl text-slate-400 mr-2"></i> 지도 영역 (네이버/카카오맵 연동)
                         </div>
-                        <table class="w-full text-sm text-left border-t border-slate-300">
+                        <div class="overflow-x-auto">
+                        <table class="w-full text-xs sm:text-sm text-left border-t border-slate-300">
                             <tbody class="divide-y divide-slate-200">
-                                <tr><th class="w-32 py-3 pr-4 text-slate-500 font-semibold align-top">주소</th><td class="py-3 text-slate-800">경기도 시흥시 엠티브이28로 11 (정왕동 시화 MTV 1사 907호)</td></tr>
-                                <tr><th class="py-3 pr-4 text-slate-500 font-semibold align-top">대표전화</th><td class="py-3 text-slate-800">031-488-8390~1</td></tr>
-                                <tr><th class="py-3 pr-4 text-slate-500 font-semibold align-top">FAX</th><td class="py-3 text-slate-800">031-488-8392</td></tr>
+                                <tr><th class="w-20 sm:w-32 py-3 pr-2 sm:pr-4 text-slate-500 font-semibold align-top">주소</th><td class="py-3 text-slate-800">경기도 시흥시 엠티브이28로 11 (정왕동 시화 MTV 1사 907호)</td></tr>
+                                <tr><th class="w-20 sm:w-32 py-3 pr-2 sm:pr-4 text-slate-500 font-semibold align-top">대표전화</th><td class="py-3 text-slate-800">031-488-8390~1</td></tr>
+                                <tr><th class="w-20 sm:w-32 py-3 pr-2 sm:pr-4 text-slate-500 font-semibold align-top">FAX</th><td class="py-3 text-slate-800">031-488-8392</td></tr>
                             </tbody>
                         </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -449,7 +465,7 @@
                     <button onclick="switchProdSub('collector','wet')" class="prod-sub-tab px-3 py-1.5 rounded-full text-xs font-semibold bg-white text-slate-600 border border-slate-300 hover:bg-slate-100 transition" data-prodsub="collector:wet">습식 집진기</button>
                 </div>
 
-                <div class="bg-slate-50 p-8 rounded-2xl border border-slate-200">
+                <div class="bg-slate-50 p-4 sm:p-8 rounded-2xl border border-slate-200">
 
                     <!-- 흡입식 샌딩기 -->
                     <div class="prod-pane" id="prod-suction">
@@ -1873,7 +1889,7 @@
 
                     <div class="bg-slate-50 p-6 sm:p-8 rounded-xl border border-slate-200 mb-8 space-y-4">
                         <h4 class="font-bold text-slate-900 text-base border-b border-slate-200 pb-2">상세 사양 및 규격 정보</h4>
-                        <div id="detailSpecs" class="mb-4"></div>
+                        <div id="detailSpecs" class="mb-4 overflow-x-auto"></div>
                         <p id="detailDesc" class="text-sm text-slate-600 leading-relaxed"></p>
                     </div>
 
@@ -2037,7 +2053,7 @@
                     <button onclick="switchSomoTab('etc')" class="somo-tab px-4 py-2.5 rounded text-sm font-semibold text-slate-600 hover:bg-slate-100 transition" data-somo="etc">기타 부속품</button>
                 </div>
 
-                <div class="bg-slate-50 p-8 rounded-2xl border border-slate-200">
+                <div class="bg-slate-50 p-4 sm:p-8 rounded-2xl border border-slate-200">
                     <div class="somo-pane" id="somo-gun">
                         <h3 class="text-xl font-bold text-slate-900 mb-1">샌딩건</h3>
                         <p class="text-slate-500 text-sm mb-6">흡입식/직압식 샌딩건 및 건 바디 라인업입니다.</p>
@@ -2637,7 +2653,7 @@
                         <span class="text-slate-900 font-semibold">임가공</span>
                     </div>
                 </div>
-                <div class="bg-slate-50 p-12 rounded-2xl border border-slate-200 text-center max-w-3xl mx-auto">
+                <div class="bg-slate-50 p-6 sm:p-12 rounded-2xl border border-slate-200 text-center max-w-3xl mx-auto">
                     <div class="max-w-md mx-auto h-52 bg-slate-200 rounded mb-6 flex items-center justify-center text-slate-500 text-sm overflow-hidden border border-slate-300">
                         <i class="fa-solid fa-image text-2xl text-slate-400 mr-2"></i> 임가공 작업 현장 및 샘플 사진
                     </div>
@@ -2661,7 +2677,7 @@
                         <span class="text-slate-900 font-semibold">기술자료</span>
                     </div>
                 </div>
-                <div class="bg-slate-50 p-8 rounded-2xl border border-slate-200 space-y-4 max-w-4xl mx-auto">
+                <div class="bg-slate-50 p-4 sm:p-8 rounded-2xl border border-slate-200 space-y-4 max-w-4xl mx-auto">
                     <div class="flex justify-between items-center p-4 bg-white rounded border border-slate-200">
                         <div>
                             <h4 class="font-bold text-slate-900 text-sm">2026 샌딩장비 통합 카탈로그 (국문/영문)</h4>
@@ -2686,12 +2702,12 @@
                         <span class="text-slate-900 font-semibold">고객지원</span>
                     </div>
                 </div>
-                <div class="flex gap-2 mb-8 border-b border-slate-200 pb-4">
+                <div class="flex flex-wrap gap-2 mb-8 border-b border-slate-200 pb-4">
                     <button onclick="switchSupportTab('notice')" class="support-tab px-5 py-2 rounded text-sm font-bold bg-red-700 text-white transition" data-stype="notice">공지사항</button>
                     <button onclick="switchSupportTab('used')" class="support-tab px-5 py-2 rounded text-sm font-semibold text-slate-600 hover:bg-slate-100 transition" data-stype="used">중고장비</button>
                 </div>
 
-                <div id="support-notice" class="support-pane bg-slate-50 p-8 rounded-2xl border border-slate-200">
+                <div id="support-notice" class="support-pane bg-slate-50 p-4 sm:p-8 rounded-2xl border border-slate-200">
                     <h3 class="text-xl font-bold text-slate-900 mb-4">공지사항</h3>
                     <div class="space-y-3">
                         <div class="p-4 border border-slate-200 rounded bg-white flex justify-between items-center">
@@ -2717,7 +2733,7 @@
                     </div>
                 </div>
 
-                <div id="support-used" class="support-pane hidden bg-slate-50 p-8 rounded-2xl border border-slate-200">
+                <div id="support-used" class="support-pane hidden bg-slate-50 p-4 sm:p-8 rounded-2xl border border-slate-200">
                     <h3 class="text-xl font-bold text-slate-900 mb-4">중고장비 매물 안내</h3>
                     <p class="text-slate-600 text-sm mb-6">성능 점검 및 오버홀을 완료한 가성비 우수한 중고 샌딩장비입니다.</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -2748,12 +2764,12 @@
 
     <!-- ================= MODALS ================= -->
     <div id="quoteModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-xl w-full p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+        <div class="bg-white rounded-2xl max-w-xl w-full p-6 sm:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <button onclick="closeModal('quoteModal')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-700 text-xl"><i class="fa-solid fa-xmark"></i></button>
             <h3 class="text-2xl font-bold text-slate-900 mb-2">제품 견적 문의하기</h3>
             <p class="text-slate-500 text-xs mb-6">상세 내용을 남겨주시면 담당 엔지니어가 신속하게 연락드립니다.</p>
             <form onsubmit="handleFormSubmit(event, 'quoteModal')" class="space-y-4">
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">업체명 *</label>
                         <input type="text" required class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
@@ -2763,7 +2779,7 @@
                         <input type="text" required class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
                     </div>
                 </div>
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">연락처 *</label>
                         <input type="text" required placeholder="010-0000-0000" class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
@@ -2773,7 +2789,7 @@
                         <input type="email" class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
                     </div>
                 </div>
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">제품 최대 사이즈</label>
                         <input type="text" placeholder="예: 500 x 500 x 300 mm" class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
@@ -2786,7 +2802,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">하루 생산량</label>
                         <input type="text" placeholder="예: 1,000개" class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
@@ -2806,12 +2822,12 @@
     </div>
 
     <div id="processingModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-xl w-full p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+        <div class="bg-white rounded-2xl max-w-xl w-full p-6 sm:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <button onclick="closeModal('processingModal')" class="absolute top-6 right-6 text-slate-400 hover:text-slate-700 text-xl"><i class="fa-solid fa-xmark"></i></button>
             <h3 class="text-2xl font-bold text-slate-900 mb-2">임가공 의뢰 문의</h3>
             <p class="text-slate-500 text-xs mb-6">가공하실 제품의 정보를 입력해 주시면 샘플 테스트 및 견적을 안내해 드립니다.</p>
             <form onsubmit="handleFormSubmit(event, 'processingModal')" class="space-y-4">
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">업체명 *</label>
                         <input type="text" required class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
@@ -2821,7 +2837,7 @@
                         <input type="text" required class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
                     </div>
                 </div>
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">연락처 *</label>
                         <input type="text" required placeholder="010-0000-0000" class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
@@ -2831,7 +2847,7 @@
                         <input type="email" class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
                     </div>
                 </div>
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">제품 사이즈</label>
                         <input type="text" placeholder="예: 100 x 100 mm" class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700">
@@ -2894,10 +2910,27 @@
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.classList.remove('text-red-700', 'border-b-2', 'border-red-700');
             });
-            const activeNav = document.querySelector(`[data-nav="${pageId}"]`);
-            if(activeNav) {
+            document.querySelectorAll(`[data-nav="${pageId}"]`).forEach(activeNav => {
                 activeNav.classList.add('text-red-700', 'border-b-2', 'border-red-700');
-            }
+            });
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileNav');
+            const icon = document.querySelector('#mobileMenuBtn i');
+            const isHidden = menu.classList.toggle('hidden');
+            menu.classList.toggle('flex', !isHidden);
+            icon.classList.toggle('fa-bars', isHidden);
+            icon.classList.toggle('fa-xmark', !isHidden);
+        }
+
+        function closeMobileMenu() {
+            const menu = document.getElementById('mobileNav');
+            menu.classList.add('hidden');
+            menu.classList.remove('flex');
+            const icon = document.querySelector('#mobileMenuBtn i');
+            icon.classList.add('fa-bars');
+            icon.classList.remove('fa-xmark');
         }
 
         function switchSubTab(parent, subId) {
