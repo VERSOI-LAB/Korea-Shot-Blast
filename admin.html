@@ -81,6 +81,8 @@
                 <button onclick="switchTab('notices')" class="admin-tab tab-btn px-4 py-2.5 rounded text-sm font-bold bg-white border border-slate-200 transition" data-tab="notices">공지사항</button>
                 <button onclick="switchTab('used')" class="admin-tab tab-btn px-4 py-2.5 rounded text-sm font-bold bg-white border border-slate-200 transition" data-tab="used">중고장비 매물</button>
                 <button onclick="switchTab('products')" class="admin-tab tab-btn px-4 py-2.5 rounded text-sm font-bold bg-white border border-slate-200 transition" data-tab="products">제품 관리</button>
+                <button onclick="switchTab('tech')" class="admin-tab tab-btn px-4 py-2.5 rounded text-sm font-bold bg-white border border-slate-200 transition" data-tab="tech">기술자료</button>
+                <button onclick="switchTab('cert')" class="admin-tab tab-btn px-4 py-2.5 rounded text-sm font-bold bg-white border border-slate-200 transition" data-tab="cert">인증현황</button>
             </div>
 
             <!-- 문의 접수 내역 -->
@@ -177,9 +179,19 @@
                         <input id="prodShortDescInput" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2.5 text-sm focus:outline-none focus:border-red-700">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">사진</label>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">사진 (목록 카드용)</label>
                         <input id="prodImageInput" type="file" accept="image/*" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-xs focus:outline-none focus:border-red-700">
                         <p class="text-[11px] text-slate-400 mt-1">수정 시 비워두면 기존 사진이 유지됩니다.</p>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">상세페이지 메인 사진</label>
+                        <input id="prodMainPhotoInput" type="file" accept="image/*" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-xs focus:outline-none focus:border-red-700">
+                        <p class="text-[11px] text-slate-400 mt-1">비워두면 목록 카드 사진이 대신 표시됩니다. 수정 시 비워두면 기존 사진이 유지됩니다.</p>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">현장 사진 (상세페이지 영상 자리에 표시)</label>
+                        <input id="prodSitePhotoInput" type="file" accept="image/*" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-xs focus:outline-none focus:border-red-700">
+                        <p class="text-[11px] text-slate-400 mt-1">있으면 영상 위에 표시되고, 영상은 그 아래로 내려갑니다. 수정 시 비워두면 기존 사진이 유지됩니다.</p>
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">작동 영상 (YouTube embed URL, 제품소개 항목만 표시됨)</label>
@@ -219,6 +231,53 @@
                     <span id="prodFilterCount" class="text-xs text-slate-400"></span>
                 </div>
                 <div id="productsList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            </section>
+
+            <!-- 기술자료 -->
+            <section id="tab-tech" class="tab-panel">
+                <h2 class="font-bold text-slate-900 text-lg mb-4">기술자료</h2>
+                <form onsubmit="createTechDoc(event)" class="bg-white p-5 rounded-xl border border-slate-200 mb-6 space-y-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">자료명 *</label>
+                            <input id="techTitleInput" required class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2.5 text-sm focus:outline-none focus:border-red-700">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">용량 표시 (예: 557 KB)</label>
+                            <input id="techSizeInput" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2.5 text-sm focus:outline-none focus:border-red-700">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">PDF 파일</label>
+                        <input id="techFileInput" type="file" accept="application/pdf" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-xs focus:outline-none focus:border-red-700">
+                        <p class="text-[11px] text-slate-400 mt-1">파일을 올리지 않으면 "준비중"으로 표시됩니다.</p>
+                    </div>
+                    <button type="submit" class="bg-red-700 hover:bg-red-800 text-white px-5 py-2.5 rounded font-bold text-sm transition">자료 추가</button>
+                </form>
+                <div id="techList" class="space-y-2"></div>
+            </section>
+
+            <!-- 인증현황 -->
+            <section id="tab-cert" class="tab-panel">
+                <h2 class="font-bold text-slate-900 text-lg mb-4">인증현황</h2>
+                <form onsubmit="createCertification(event)" class="bg-white p-5 rounded-xl border border-slate-200 mb-6 space-y-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">인증명 *</label>
+                        <input id="certTitleInput" required placeholder="예: ISO 9001 / ISO 14001" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2.5 text-sm focus:outline-none focus:border-red-700">
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">발급기관 / 설명</label>
+                            <input id="certAuthorityInput" placeholder="예: 중소기업청장 인증" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2.5 text-sm focus:outline-none focus:border-red-700">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">인증/등록 번호</label>
+                            <input id="certNumberInput" placeholder="예: 제 R6061-1810 호" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2.5 text-sm focus:outline-none focus:border-red-700">
+                        </div>
+                    </div>
+                    <button type="submit" class="bg-red-700 hover:bg-red-800 text-white px-5 py-2.5 rounded font-bold text-sm transition">인증 추가</button>
+                </form>
+                <div id="certAdminList" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
             </section>
         </main>
     </div>
@@ -342,6 +401,8 @@
         if (tab === 'notices') loadNotices();
         if (tab === 'used') loadUsedEquipment();
         if (tab === 'products') loadProducts();
+        if (tab === 'tech') loadTechDocs();
+        if (tab === 'cert') loadCertifications();
     }
 
     function esc(s) {
@@ -494,6 +555,103 @@
             btn.disabled = false;
         }
     }
+    /* ===================== 기술자료 ===================== */
+    async function loadTechDocs() {
+        const el = document.getElementById('techList');
+        el.innerHTML = '<p class="text-sm text-slate-400">불러오는 중...</p>';
+        const { data, error } = await sb.from('tech_docs').select('*').order('sort_order', { ascending: true });
+        if (error) { el.innerHTML = `<p class="text-sm text-red-600">${esc(error.message)}</p>`; return; }
+        if (!data.length) { el.innerHTML = '<p class="text-sm text-slate-400">등록된 기술자료가 없습니다.</p>'; return; }
+        el.innerHTML = data.map(row => `
+            <div class="bg-white p-4 rounded-lg border border-slate-200 flex items-center gap-3">
+                <div class="flex-1">
+                    <span class="text-sm font-semibold text-slate-800">${esc(row.title)}</span>
+                    <span class="text-xs text-slate-400 ml-2">${esc(row.size_label || '')}</span>
+                    ${row.file_url ? `<a href="${esc(row.file_url)}" target="_blank" class="text-xs text-red-700 ml-2 hover:underline">파일 보기</a>` : '<span class="text-xs text-amber-600 ml-2">파일 없음</span>'}
+                </div>
+                <button onclick="deleteTechDoc('${row.id}')" class="text-slate-300 hover:text-red-600 text-sm"><i class="fa-solid fa-trash"></i></button>
+            </div>`).join('');
+    }
+    async function createTechDoc(e) {
+        e.preventDefault();
+        const title = document.getElementById('techTitleInput').value.trim();
+        if (!title) return;
+        const btn = e.target.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        try {
+            let file_url = null;
+            const file = document.getElementById('techFileInput').files[0];
+            if (file) {
+                const path = `tech-docs/${Date.now()}_${file.name}`;
+                const { error: upErr } = await sb.storage.from('site-images').upload(path, file);
+                if (!upErr) file_url = sb.storage.from('site-images').getPublicUrl(path).data.publicUrl;
+            }
+            const { data } = await sb.from('tech_docs').select('sort_order').order('sort_order', { ascending: false }).limit(1);
+            const nextOrder = data && data.length ? data[0].sort_order + 1 : 0;
+            const { error } = await sb.from('tech_docs').insert({
+                title,
+                size_label: document.getElementById('techSizeInput').value.trim(),
+                file_url,
+                sort_order: nextOrder
+            });
+            if (error) { alert(error.message); return; }
+            e.target.reset();
+            loadTechDocs();
+        } finally {
+            btn.disabled = false;
+        }
+    }
+    async function deleteTechDoc(id) {
+        if (!confirm('이 기술자료를 삭제하시겠습니까?')) return;
+        await sb.from('tech_docs').delete().eq('id', id);
+        loadTechDocs();
+    }
+
+    /* ===================== 인증현황 ===================== */
+    async function loadCertifications() {
+        const el = document.getElementById('certAdminList');
+        el.innerHTML = '<p class="text-sm text-slate-400">불러오는 중...</p>';
+        const { data, error } = await sb.from('certifications').select('*').order('sort_order', { ascending: true });
+        if (error) { el.innerHTML = `<p class="text-sm text-red-600">${esc(error.message)}</p>`; return; }
+        if (!data.length) { el.innerHTML = '<p class="text-sm text-slate-400">등록된 인증이 없습니다.</p>'; return; }
+        el.innerHTML = data.map(row => `
+            <div class="bg-white p-4 rounded-lg border border-slate-200 flex items-start justify-between gap-3">
+                <div>
+                    <span class="text-sm font-bold text-slate-900">${esc(row.title)}</span><br>
+                    <span class="text-xs text-slate-500">${esc(row.authority || '')}</span>
+                    ${row.cert_number ? `<br><span class="text-xs text-slate-400">${esc(row.cert_number)}</span>` : ''}
+                </div>
+                <button onclick="deleteCertification('${row.id}')" class="text-slate-300 hover:text-red-600 text-sm shrink-0"><i class="fa-solid fa-trash"></i></button>
+            </div>`).join('');
+    }
+    async function createCertification(e) {
+        e.preventDefault();
+        const title = document.getElementById('certTitleInput').value.trim();
+        if (!title) return;
+        const btn = e.target.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        try {
+            const { data } = await sb.from('certifications').select('sort_order').order('sort_order', { ascending: false }).limit(1);
+            const nextOrder = data && data.length ? data[0].sort_order + 1 : 0;
+            const { error } = await sb.from('certifications').insert({
+                title,
+                authority: document.getElementById('certAuthorityInput').value.trim(),
+                cert_number: document.getElementById('certNumberInput').value.trim() || null,
+                sort_order: nextOrder
+            });
+            if (error) { alert(error.message); return; }
+            e.target.reset();
+            loadCertifications();
+        } finally {
+            btn.disabled = false;
+        }
+    }
+    async function deleteCertification(id) {
+        if (!confirm('이 인증을 삭제하시겠습니까?')) return;
+        await sb.from('certifications').delete().eq('id', id);
+        loadCertifications();
+    }
+
     async function deleteUsedEquipment(id) {
         if (!confirm('이 매물을 삭제하시겠습니까?')) return;
         await sb.from('used_equipment').delete().eq('id', id);
@@ -604,6 +762,8 @@
 
     let productsCache = [];
     let currentProductImageUrl = null;
+    let currentProductMainPhotoUrl = null;
+    let currentProductSitePhotoUrl = null;
 
     async function loadProducts() {
         const el = document.getElementById('productsList');
@@ -668,6 +828,8 @@
         document.getElementById('prodFullDescInput').value = row.full_desc || '';
         document.getElementById('prodActiveInput').checked = row.active;
         currentProductImageUrl = row.thumb_url;
+        currentProductMainPhotoUrl = row.main_photo_url;
+        currentProductSitePhotoUrl = row.site_photo_url;
         document.getElementById('prodSubmitBtn').textContent = '수정 저장';
         document.getElementById('prodCancelBtn').classList.remove('hidden');
         window.scrollTo({ top: document.getElementById('tab-products').offsetTop - 20, behavior: 'smooth' });
@@ -679,6 +841,8 @@
         document.getElementById('prodSpecsHtmlMode').checked = false;
         toggleSpecsMode();
         currentProductImageUrl = null;
+        currentProductMainPhotoUrl = null;
+        currentProductSitePhotoUrl = null;
         document.getElementById('prodSubmitBtn').textContent = '제품 추가';
         document.getElementById('prodCancelBtn').classList.add('hidden');
     }
@@ -695,6 +859,20 @@
                 const path = `products/${Date.now()}_${file.name}`;
                 const { error: upErr } = await sb.storage.from('site-images').upload(path, file);
                 if (!upErr) thumb_url = sb.storage.from('site-images').getPublicUrl(path).data.publicUrl;
+            }
+            let main_photo_url = editId ? currentProductMainPhotoUrl : null;
+            const mainPhotoFile = document.getElementById('prodMainPhotoInput').files[0];
+            if (mainPhotoFile) {
+                const path = `products/main/${Date.now()}_${mainPhotoFile.name}`;
+                const { error: upErr } = await sb.storage.from('site-images').upload(path, mainPhotoFile);
+                if (!upErr) main_photo_url = sb.storage.from('site-images').getPublicUrl(path).data.publicUrl;
+            }
+            let site_photo_url = editId ? currentProductSitePhotoUrl : null;
+            const sitePhotoFile = document.getElementById('prodSitePhotoInput').files[0];
+            if (sitePhotoFile) {
+                const path = `products/site/${Date.now()}_${sitePhotoFile.name}`;
+                const { error: upErr } = await sb.storage.from('site-images').upload(path, sitePhotoFile);
+                if (!upErr) site_photo_url = sb.storage.from('site-images').getPublicUrl(path).data.publicUrl;
             }
             const section = document.getElementById('prodSectionInput').value;
             const category = section === 'abrasives' ? null : document.getElementById('prodCategoryInput').value;
@@ -714,6 +892,8 @@
                 full_desc: document.getElementById('prodFullDescInput').value.trim(),
                 active: document.getElementById('prodActiveInput').checked,
                 thumb_url,
+                main_photo_url,
+                site_photo_url,
             };
 
             let error;
