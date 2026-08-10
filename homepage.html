@@ -746,7 +746,7 @@
                 </div>
                 <div class="bg-slate-50 p-6 sm:p-12 rounded-2xl border border-slate-200 text-center max-w-3xl mx-auto">
                     <div class="max-w-md mx-auto h-52 bg-slate-200 rounded mb-6 flex items-center justify-center text-slate-500 text-sm overflow-hidden border border-slate-300">
-                        <i class="fa-solid fa-image text-2xl text-slate-400 mr-2"></i> 임가공 작업 현장 및 샘플 사진
+                        <img src="images/임가공/임가공.png" alt="임가공 작업 현장 및 샘플 사진" class="w-full h-full object-cover">
                     </div>
                     <h3 class="text-2xl font-bold text-slate-900 mb-3">표면처리 임가공 대행 서비스</h3>
                     <p class="text-slate-600 text-sm max-w-lg mx-auto mb-8 leading-relaxed">장비 도입이 부담되시거나 대량 가공이 필요하신가요? 숙련된 전문가가 최첨단 장비로 완벽한 임가공을 대행해 드립니다.</p>
@@ -1118,7 +1118,7 @@
             document.getElementById(modalId).classList.add('hidden');
         }
 
-        function openProductDetail(title, specs, desc, showQuote = true, origin = 'products', img = null, videoUrl = null) {
+        function openProductDetail(title, specs, desc, showQuote = true, origin = 'products', img = null, videoUrl = null, sitePhotoUrl = null) {
             currentOriginPage = origin;
             document.getElementById('detailTitle').innerText = title;
             document.getElementById('detailSpecs').innerHTML = specs;
@@ -1130,12 +1130,19 @@
             const photoHtmlTall = img
                 ? `<img src="${img}" alt="${title}" class="w-full h-80 object-contain rounded-xl border border-slate-200 bg-white p-4">`
                 : `<div class="h-80 bg-slate-100 rounded-xl flex items-center justify-center text-slate-500 text-sm border border-slate-200"><i class="fa-solid fa-image text-2xl mr-2"></i> 제품 고화질 사진</div>`;
+            const sitePhotoHtml = sitePhotoUrl
+                ? `<img src="${sitePhotoUrl}" alt="${title} 현장 사진" class="w-full h-64 object-cover rounded-xl border border-slate-200 bg-white">`
+                : '';
             const videoHtml = videoUrl
                 ? `<div class="h-64 rounded-xl overflow-hidden border border-slate-200 bg-slate-900"><iframe class="w-full h-full" src="${videoUrl}" title="${title} 작동 영상" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>`
-                : `<div id="videoContainerBox" class="h-64 bg-slate-900 rounded-xl flex flex-col items-center justify-center text-slate-400 text-sm text-center p-4">
+                : (sitePhotoUrl ? '' : `<div id="videoContainerBox" class="h-64 bg-slate-900 rounded-xl flex flex-col items-center justify-center text-slate-400 text-sm text-center p-4">
                         <i class="fa-solid fa-circle-play text-4xl text-red-400 mb-2"></i>
                         <span>장비 가동 작동 영상 자료<br>(YouTube / MP4 연동 영역)</span>
-                    </div>`;
+                    </div>`);
+            // 현장 사진이 있으면 영상 자리에 현장 사진을 넣고, 기존 영상은 그 아래로 내림
+            const rightColHtml = sitePhotoHtml
+                ? `<div class="flex flex-col gap-6">${sitePhotoHtml}${videoHtml}</div>`
+                : videoHtml;
 
             // 연마재/소모품인 경우 동영상 영역을 숨기고 사진만 전체 폭 또는 단독 박스로 출력
             const mediaContainer = document.getElementById('detailMediaContainer');
@@ -1143,8 +1150,8 @@
                 mediaContainer.className = "mb-8";
                 mediaContainer.innerHTML = photoHtmlTall;
             } else {
-                mediaContainer.className = "grid grid-cols-1 md:grid-cols-2 gap-6 mb-8";
-                mediaContainer.innerHTML = photoHtml + videoHtml;
+                mediaContainer.className = "grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 items-start";
+                mediaContainer.innerHTML = photoHtml + rightColHtml;
             }
 
             // 연마재/소모품인 경우 '이 제품 견적 문의하기' 버튼 숨김 처리
@@ -1306,7 +1313,7 @@
         function openCatalogProduct(id) {
             const p = productsCatalog.find(x => x.id === id);
             if (!p) return;
-            openProductDetail(p.name, p.specs_html || '', p.full_desc || p.short_desc || '', p.section === 'products', p.section, p.thumb_url || null, p.video_url || null);
+            openProductDetail(p.name, p.specs_html || '', p.full_desc || p.short_desc || '', p.section === 'products', p.section, p.thumb_url || null, p.video_url || null, p.site_photo_url || null);
         }
 
         loadHomeNotice();
