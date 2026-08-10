@@ -1313,7 +1313,7 @@
         function openCatalogProduct(id) {
             const p = productsCatalog.find(x => x.id === id);
             if (!p) return;
-            openProductDetail(p.name, p.specs_html || '', p.full_desc || p.short_desc || '', p.section === 'products', p.section, p.thumb_url || null, p.video_url || null, p.site_photo_url || null);
+            openProductDetail(p.name, p.specs_html || '', p.full_desc || p.short_desc || '', p.section === 'products', p.section, p.main_photo_url || p.thumb_url || null, p.video_url || null, p.site_photo_url || null);
         }
 
         loadHomeNotice();
