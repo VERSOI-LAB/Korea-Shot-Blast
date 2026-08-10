@@ -1124,9 +1124,6 @@
             document.getElementById('detailSpecs').innerHTML = specs;
             document.getElementById('detailDesc').innerText = desc;
 
-            // 장비(제품소개) 상세페이지 사진은 추후 실사진으로 교체 예정이라 우선 비워둡니다.
-            if (origin === 'products') img = null;
-
             const photoHtml = img
                 ? `<img src="${img}" alt="${title}" class="w-full h-64 object-contain rounded-xl border border-slate-200 bg-white p-4">`
                 : `<div class="h-64 bg-slate-100 rounded-xl flex items-center justify-center text-slate-500 text-sm border border-slate-200"><i class="fa-solid fa-image text-2xl mr-2"></i> 제품 고화질 사진</div>`;
