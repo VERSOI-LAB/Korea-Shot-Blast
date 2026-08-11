@@ -1070,7 +1070,7 @@
             document.getElementById(modalId).classList.add('hidden');
         }
 
-        function openProductDetail(title, specs, desc, showQuote = true, origin = 'products', img = null, videoUrl = null, sitePhotoUrl = null) {
+        function openProductDetail(title, specs, desc, showQuote = true, origin = 'products', img = null, videoUrl = null, sitePhotoUrl = null, category = null) {
             currentOriginPage = origin;
             document.getElementById('detailTitle').innerText = title;
             document.getElementById('detailSpecs').innerHTML = specs;
@@ -1082,15 +1082,22 @@
             const photoHtmlTall = img
                 ? `<img src="${img}" alt="${title}" class="w-full h-80 object-contain rounded-xl border border-slate-200 bg-white p-4">`
                 : `<div class="h-80 bg-slate-100 rounded-xl flex items-center justify-center text-slate-500 text-sm border border-slate-200"><i class="fa-solid fa-image text-2xl mr-2"></i> 제품 고화질 사진</div>`;
-            const sitePhotoHtml = sitePhotoUrl
+            // 로봇 블라스터는 실제 작동 영상만 노출하고, 사진으로 대체하지 않음
+            const sitePhotoHtml = (sitePhotoUrl && category !== 'robot')
                 ? `<img src="${sitePhotoUrl}" alt="${title} 현장 사진" class="w-full h-64 object-cover rounded-xl border border-slate-200 bg-white">`
                 : '';
-            const videoHtml = videoUrl
-                ? `<div class="h-64 rounded-xl overflow-hidden border border-slate-200 bg-slate-900"><iframe class="w-full h-full" src="${videoUrl}" title="${title} 작동 영상" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>`
-                : (sitePhotoUrl ? '' : `<div id="videoContainerBox" class="h-64 bg-slate-900 rounded-xl flex flex-col items-center justify-center text-slate-400 text-sm text-center p-4">
+            const emptyMediaSlotHtml = category === 'robot'
+                ? `<div id="videoContainerBox" class="h-64 bg-slate-900 rounded-xl flex flex-col items-center justify-center text-slate-400 text-sm text-center p-4">
                         <i class="fa-solid fa-circle-play text-4xl text-red-400 mb-2"></i>
                         <span>장비 가동 작동 영상 자료<br>(YouTube / MP4 연동 영역)</span>
-                    </div>`);
+                    </div>`
+                : `<div id="videoContainerBox" class="h-64 bg-slate-100 rounded-xl flex flex-col items-center justify-center text-slate-500 text-sm text-center p-4 border border-slate-200">
+                        <i class="fa-solid fa-image text-2xl mb-2"></i>
+                        <span>현장 사진 준비중</span>
+                    </div>`;
+            const videoHtml = videoUrl
+                ? `<div class="h-64 rounded-xl overflow-hidden border border-slate-200 bg-slate-900"><iframe class="w-full h-full" src="${videoUrl}" title="${title} 작동 영상" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>`
+                : (sitePhotoHtml ? '' : emptyMediaSlotHtml);
             // 현장 사진이 있으면 영상 자리에 현장 사진을 넣고, 기존 영상은 그 아래로 내림
             const rightColHtml = sitePhotoHtml
                 ? `<div class="flex flex-col gap-6">${sitePhotoHtml}${videoHtml}</div>`
@@ -1296,7 +1303,7 @@
         function openCatalogProduct(id) {
             const p = productsCatalog.find(x => x.id === id);
             if (!p) return;
-            openProductDetail(p.name, p.specs_html || '', p.full_desc || p.short_desc || '', p.section === 'products', p.section, p.main_photo_url || p.thumb_url || null, p.video_url || null, p.site_photo_url || null);
+            openProductDetail(p.name, p.specs_html || '', p.full_desc || p.short_desc || '', p.section === 'products', p.section, p.main_photo_url || p.thumb_url || null, p.video_url || null, p.site_photo_url || null, p.category || null);
         }
 
         loadHomeNotice();
