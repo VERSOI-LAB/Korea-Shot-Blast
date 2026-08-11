@@ -701,6 +701,8 @@
         const section = document.getElementById('prodSectionInput').value;
         const subWrap = document.getElementById('prodSubcategoryWrap');
         const subSelect = document.getElementById('prodSubcategoryInput');
+        const sitePhotoWrap = document.getElementById('prodSitePhotoWrap');
+        sitePhotoWrap.classList.toggle('hidden', section === 'products' && document.getElementById('prodCategoryInput').value === 'robot');
         subSelect.innerHTML = '';
         if (section !== 'products') { subWrap.classList.add('hidden'); return; }
         const meta = PRODUCT_TAXONOMY[document.getElementById('prodCategoryInput').value];
