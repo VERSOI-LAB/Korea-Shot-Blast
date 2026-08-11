@@ -190,12 +190,16 @@
                     </div>
                     <div id="prodSitePhotoWrap">
                         <label class="block text-xs font-bold text-slate-700 mb-1">현장 사진 (상세페이지 영상 자리에 표시)</label>
-                        <input id="prodSitePhotoInput" type="file" accept="image/*" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-xs focus:outline-none focus:border-red-700">
+                        <input id="prodSitePhotoInput" type="file" accept="image/*" onchange="previewSitePhotoFile(this)" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-xs focus:outline-none focus:border-red-700">
                         <p class="text-[11px] text-slate-400 mt-1">있으면 영상 위에 표시되고, 영상은 그 아래로 내려갑니다. 수정 시 비워두면 기존 사진이 유지됩니다. (ROBOT BLASTER 카테고리는 실제 작동 영상만 노출되어 이 사진이 적용되지 않습니다)</p>
+                        <img id="prodSitePhotoPreview" class="hidden mt-2 max-h-40 rounded border border-slate-200 object-contain">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">작동 영상 (YouTube embed URL, 제품소개 항목만 표시됨)</label>
-                        <input id="prodVideoUrlInput" placeholder="https://www.youtube.com/embed/영상ID" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2.5 text-sm focus:outline-none focus:border-red-700">
+                        <input id="prodVideoUrlInput" oninput="previewVideoUrl(this.value)" placeholder="https://www.youtube.com/embed/영상ID" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2.5 text-sm focus:outline-none focus:border-red-700">
+                        <div id="prodVideoPreviewWrap" class="hidden mt-2 aspect-video max-w-sm rounded border border-slate-200 overflow-hidden bg-slate-900">
+                            <iframe id="prodVideoPreviewFrame" class="w-full h-full" src="" frameborder="0" allowfullscreen></iframe>
+                        </div>
                     </div>
                     <div>
                         <div class="flex items-center justify-between mb-1">
@@ -832,6 +836,8 @@
         currentProductImageUrl = row.thumb_url;
         currentProductMainPhotoUrl = row.main_photo_url;
         currentProductSitePhotoUrl = row.site_photo_url;
+        showSitePhotoPreview(row.site_photo_url);
+        previewVideoUrl(row.video_url || '');
         document.getElementById('prodSubmitBtn').textContent = '수정 저장';
         document.getElementById('prodCancelBtn').classList.remove('hidden');
         window.scrollTo({ top: document.getElementById('tab-products').offsetTop - 20, behavior: 'smooth' });
@@ -845,8 +851,40 @@
         currentProductImageUrl = null;
         currentProductMainPhotoUrl = null;
         currentProductSitePhotoUrl = null;
+        showSitePhotoPreview(null);
+        previewVideoUrl('');
         document.getElementById('prodSubmitBtn').textContent = '제품 추가';
         document.getElementById('prodCancelBtn').classList.add('hidden');
+    }
+    function showSitePhotoPreview(url) {
+        const img = document.getElementById('prodSitePhotoPreview');
+        if (url) {
+            img.src = url;
+            img.classList.remove('hidden');
+        } else {
+            img.src = '';
+            img.classList.add('hidden');
+        }
+    }
+    function previewSitePhotoFile(input) {
+        const file = input.files[0];
+        if (file) {
+            showSitePhotoPreview(URL.createObjectURL(file));
+        } else {
+            showSitePhotoPreview(currentProductSitePhotoUrl);
+        }
+    }
+    function previewVideoUrl(url) {
+        const wrap = document.getElementById('prodVideoPreviewWrap');
+        const frame = document.getElementById('prodVideoPreviewFrame');
+        url = (url || '').trim();
+        if (url) {
+            frame.src = url;
+            wrap.classList.remove('hidden');
+        } else {
+            frame.src = '';
+            wrap.classList.add('hidden');
+        }
     }
 
     async function submitProduct(e) {
