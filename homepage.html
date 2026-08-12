@@ -78,6 +78,9 @@
             <div id="heroSlider" class="relative w-full overflow-hidden mb-12 bg-slate-900 group">
                 <div class="relative h-72 sm:h-96 md:h-[480px]">
                     <div class="hero-slide absolute inset-0 opacity-100 transition-opacity duration-700 ease-in-out" data-slide="0">
+                        <video src="images/hero/브라스트 영상.mp4" poster="images/hero/mainimg_back1.jpg" class="w-full h-full object-cover" muted autoplay playsinline onended="heroGoTo(1)"></video>
+                    </div>
+                    <div class="hero-slide absolute inset-0 opacity-0 pointer-events-none transition-opacity duration-700 ease-in-out" data-slide="1">
                         <img src="images/hero/mainimg_back1.jpg" alt="한국브라스트 시화 MTV 공장" class="w-full h-full object-cover">
                         <div class="absolute inset-0 bg-gradient-to-r from-slate-900/80 via-slate-900/40 to-transparent"></div>
                         <div class="absolute inset-0 flex items-center">
@@ -89,7 +92,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="hero-slide absolute inset-0 opacity-0 pointer-events-none transition-opacity duration-700 ease-in-out" data-slide="1">
+                    <div class="hero-slide absolute inset-0 opacity-0 pointer-events-none transition-opacity duration-700 ease-in-out" data-slide="2">
                         <img src="images/hero/mainimg_back6.jpg" alt="ROBOT BLASTER" class="w-full h-full object-cover">
                         <div class="absolute inset-0 bg-gradient-to-r from-slate-900/80 via-slate-900/40 to-transparent"></div>
                         <div class="absolute inset-0 flex items-center">
@@ -101,7 +104,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="hero-slide absolute inset-0 opacity-0 pointer-events-none transition-opacity duration-700 ease-in-out" data-slide="2">
+                    <div class="hero-slide absolute inset-0 opacity-0 pointer-events-none transition-opacity duration-700 ease-in-out" data-slide="3">
                         <img src="images/hero/mainimg_back2.jpg" alt="자동화 생산라인" class="w-full h-full object-cover">
                         <div class="absolute inset-0 bg-gradient-to-r from-slate-900/80 via-slate-900/40 to-transparent"></div>
                         <div class="absolute inset-0 flex items-center">
@@ -113,7 +116,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="hero-slide absolute inset-0 opacity-0 pointer-events-none transition-opacity duration-700 ease-in-out" data-slide="3">
+                    <div class="hero-slide absolute inset-0 opacity-0 pointer-events-none transition-opacity duration-700 ease-in-out" data-slide="4">
                         <img src="images/hero/mainimg_back3.jpg" alt="표면처리 자동화 설비" class="w-full h-full object-cover">
                         <div class="absolute inset-0 bg-gradient-to-r from-slate-900/80 via-slate-900/40 to-transparent"></div>
                         <div class="absolute inset-0 flex items-center">
@@ -125,7 +128,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="hero-slide absolute inset-0 opacity-0 pointer-events-none transition-opacity duration-700 ease-in-out" data-slide="4">
+                    <div class="hero-slide absolute inset-0 opacity-0 pointer-events-none transition-opacity duration-700 ease-in-out" data-slide="5">
                         <img src="images/hero/mainimg_back4.jpg" alt="맞춤형 표면처리 장비" class="w-full h-full object-cover">
                         <div class="absolute inset-0 bg-gradient-to-r from-slate-900/80 via-slate-900/40 to-transparent"></div>
                         <div class="absolute inset-0 flex items-center">
@@ -137,7 +140,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="hero-slide absolute inset-0 opacity-0 pointer-events-none transition-opacity duration-700 ease-in-out" data-slide="5">
+                    <div class="hero-slide absolute inset-0 opacity-0 pointer-events-none transition-opacity duration-700 ease-in-out" data-slide="6">
                         <img src="images/hero/mainimg_back5.jpg" alt="한국브라스트 생산 설비" class="w-full h-full object-cover">
                         <div class="absolute inset-0 bg-gradient-to-r from-slate-900/80 via-slate-900/40 to-transparent"></div>
                         <div class="absolute inset-0 flex items-center">
@@ -160,6 +163,7 @@
                     <button onclick="heroGoTo(3)" class="hero-dot w-2.5 h-2.5 rounded-full bg-white/40 transition" data-dot="3" aria-label="4번 슬라이드"></button>
                     <button onclick="heroGoTo(4)" class="hero-dot w-2.5 h-2.5 rounded-full bg-white/40 transition" data-dot="4" aria-label="5번 슬라이드"></button>
                     <button onclick="heroGoTo(5)" class="hero-dot w-2.5 h-2.5 rounded-full bg-white/40 transition" data-dot="5" aria-label="6번 슬라이드"></button>
+                    <button onclick="heroGoTo(6)" class="hero-dot w-2.5 h-2.5 rounded-full bg-white/40 transition" data-dot="6" aria-label="7번 슬라이드"></button>
                 </div>
             </div>
 
@@ -988,22 +992,28 @@
                 s.classList.toggle('opacity-100', active);
                 s.classList.toggle('opacity-0', !active);
                 s.classList.toggle('pointer-events-none', !active);
+                const video = s.querySelector('video');
+                if (video) {
+                    if (active) { video.currentTime = 0; video.play().catch(() => {}); }
+                    else { video.pause(); }
+                }
             });
             document.querySelectorAll('.hero-dot').forEach((d, idx) => {
                 d.classList.toggle('bg-white', idx === heroIndex);
                 d.classList.toggle('bg-white/40', idx !== heroIndex);
             });
+            resetHeroTimer();
         }
         function heroSlide(delta) {
             heroGoTo(heroIndex + delta);
-            resetHeroTimer();
         }
         function resetHeroTimer() {
             clearInterval(heroTimer);
+            const activeSlide = document.querySelector(`.hero-slide[data-slide="${heroIndex}"]`);
+            if (activeSlide && activeSlide.querySelector('video')) return; // 영상 슬라이드는 재생이 끝나면(ended) 다음으로 넘어감
             heroTimer = setInterval(() => heroGoTo(heroIndex + 1), 5000);
         }
         heroGoTo(0);
-        resetHeroTimer();
 
         function switchPage(pageId) {
             document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
