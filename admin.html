@@ -190,9 +190,9 @@
                         <p class="text-[11px] text-slate-400 mt-1">비워두면 목록 카드 사진이 대신 표시됩니다. 수정 시 비워두면 기존 사진이 유지됩니다.</p>
                     </div>
                     <div id="prodSitePhotoWrap">
-                        <label class="block text-xs font-bold text-slate-700 mb-1">현장 사진 (상세페이지 영상 자리에 표시)</label>
+                        <label id="prodSitePhotoLabel" class="block text-xs font-bold text-slate-700 mb-1">현장 사진 (상세페이지 영상 자리에 표시)</label>
                         <input id="prodSitePhotoInput" type="file" accept="image/*" onchange="previewSitePhotoFile(this)" class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-xs focus:outline-none focus:border-red-700">
-                        <p class="text-[11px] text-slate-400 mt-1">있으면 영상 위에 표시되고, 영상은 그 아래로 내려갑니다. 수정 시 비워두면 기존 사진이 유지됩니다. (ROBOT BLASTER 카테고리는 실제 작동 영상만 노출되어 이 사진이 적용되지 않습니다)</p>
+                        <p id="prodSitePhotoHint" class="text-[11px] text-slate-400 mt-1">있으면 영상 위에 표시되고, 영상은 그 아래로 내려갑니다. 수정 시 비워두면 기존 사진이 유지됩니다.</p>
                         <img id="prodSitePhotoPreview" class="hidden mt-2 max-h-40 rounded border border-slate-200 object-contain">
                     </div>
                     <div>
@@ -706,8 +706,9 @@
         const section = document.getElementById('prodSectionInput').value;
         const subWrap = document.getElementById('prodSubcategoryWrap');
         const subSelect = document.getElementById('prodSubcategoryInput');
-        const sitePhotoWrap = document.getElementById('prodSitePhotoWrap');
-        sitePhotoWrap.classList.toggle('hidden', section === 'products' && document.getElementById('prodCategoryInput').value === 'robot');
+        const isRobot = section === 'products' && document.getElementById('prodCategoryInput').value === 'robot';
+        document.getElementById('prodSitePhotoLabel').textContent = isRobot ? '예비 사진 (상세페이지 영상 위에 표시)' : '현장 사진 (상세페이지 영상 자리에 표시)';
+        document.getElementById('prodSitePhotoHint').textContent = '있으면 영상 위에 표시되고, 영상은 그 아래로 내려갑니다. 수정 시 비워두면 기존 사진이 유지됩니다.';
         subSelect.innerHTML = '';
         if (section !== 'products') { subWrap.classList.add('hidden'); return; }
         const meta = PRODUCT_TAXONOMY[document.getElementById('prodCategoryInput').value];
