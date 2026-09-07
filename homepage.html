@@ -28,6 +28,8 @@
         .page-section { display: none; }
         .page-section.active { display: block; animation: fadeIn 0.25s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
+        .tilt-card { transition: transform 0.15s ease-out, box-shadow 0.15s ease-out; will-change: transform; }
+        .tilt-card:hover { box-shadow: 0 22px 38px -12px rgba(15, 23, 42, 0.35); z-index: 10; }
     </style>
 </head>
 <body class="antialiased selection:bg-red-900 selection:text-white">
@@ -169,25 +171,25 @@
 
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-                    <div class="rounded-2xl bg-gradient-to-br from-slate-100 via-white to-slate-300 border border-slate-200 shadow-md px-4 py-6 sm:py-8 text-center">
+                    <div class="tilt-card relative rounded-2xl bg-gradient-to-br from-slate-100 via-white to-slate-300 border border-slate-200 shadow-md px-4 py-6 sm:py-8 text-center">
                         <p class="flex items-baseline justify-center gap-1 whitespace-nowrap">
                             <span id="statYears" class="text-3xl sm:text-4xl font-extrabold text-red-700">27+</span>
                             <span class="text-base sm:text-lg font-bold text-red-700">Years</span>
                         </p>
                         <p class="mt-2 text-sm sm:text-base font-semibold text-slate-900">축적된 기술력</p>
                     </div>
-                    <div class="rounded-2xl bg-gradient-to-br from-slate-100 via-white to-slate-300 border border-slate-200 shadow-md px-4 py-6 sm:py-8 text-center">
+                    <div class="tilt-card relative rounded-2xl bg-gradient-to-br from-slate-100 via-white to-slate-300 border border-slate-200 shadow-md px-4 py-6 sm:py-8 text-center">
                         <p class="flex items-baseline justify-center gap-1 whitespace-nowrap">
                             <span class="text-3xl sm:text-4xl font-extrabold text-red-700">180+</span>
                             <span class="text-base sm:text-lg font-bold text-red-700">Units</span>
                         </p>
                         <p class="mt-2 text-sm sm:text-base font-semibold text-slate-900">글로벌 수출 실적</p>
                     </div>
-                    <div class="rounded-2xl bg-gradient-to-br from-slate-100 via-white to-slate-300 border border-slate-200 shadow-md px-4 py-6 sm:py-8 text-center">
+                    <div class="tilt-card relative rounded-2xl bg-gradient-to-br from-slate-100 via-white to-slate-300 border border-slate-200 shadow-md px-4 py-6 sm:py-8 text-center">
                         <p class="text-3xl sm:text-4xl font-extrabold text-red-700 whitespace-nowrap">$10M+</p>
                         <p class="mt-2 text-sm sm:text-base font-semibold text-slate-900">천만불 수출의 탑</p>
                     </div>
-                    <div class="rounded-2xl bg-gradient-to-br from-slate-100 via-white to-slate-300 border border-slate-200 shadow-md px-4 py-6 sm:py-8 text-center">
+                    <div class="tilt-card relative rounded-2xl bg-gradient-to-br from-slate-100 via-white to-slate-300 border border-slate-200 shadow-md px-4 py-6 sm:py-8 text-center">
                         <p class="flex items-baseline justify-center gap-1 whitespace-nowrap">
                             <span class="text-base sm:text-lg font-bold text-red-700">Global</span>
                             <span class="text-3xl sm:text-4xl font-extrabold text-red-700">10+</span>
@@ -202,22 +204,22 @@
                     <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-2">Industry Applications</h2>
                 </div>
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-                    <div class="relative overflow-hidden rounded-xl border border-slate-200 shadow-md bg-gradient-to-br from-slate-300 via-slate-200 to-slate-400">
+                    <div class="tilt-card relative overflow-hidden rounded-xl border border-slate-200 shadow-md bg-gradient-to-br from-slate-300 via-slate-200 to-slate-400">
                         <img src="images/industry/semiconductor.jpg" alt="반도체" class="w-full h-auto block">
                         <i class="fa-solid fa-microchip absolute left-3 top-3 sm:left-4 sm:top-4 text-base sm:text-lg text-slate-700"></i>
                         <h3 class="absolute left-3 bottom-3 sm:left-4 sm:bottom-4 text-sm sm:text-base font-extrabold text-slate-900">반도체</h3>
                     </div>
-                    <div class="relative overflow-hidden rounded-xl border border-slate-200 shadow-md bg-gradient-to-br from-slate-300 via-slate-200 to-slate-400">
+                    <div class="tilt-card relative overflow-hidden rounded-xl border border-slate-200 shadow-md bg-gradient-to-br from-slate-300 via-slate-200 to-slate-400">
                         <img src="images/industry/nuclear.jpg" alt="원자력" class="w-full h-auto block">
                         <i class="fa-solid fa-atom absolute left-3 top-3 sm:left-4 sm:top-4 text-base sm:text-lg text-slate-700"></i>
                         <h3 class="absolute left-3 bottom-3 sm:left-4 sm:bottom-4 text-sm sm:text-base font-extrabold text-slate-900">원자력</h3>
                     </div>
-                    <div class="relative overflow-hidden rounded-xl border border-slate-200 shadow-md bg-gradient-to-br from-slate-300 via-slate-200 to-slate-400">
+                    <div class="tilt-card relative overflow-hidden rounded-xl border border-slate-200 shadow-md bg-gradient-to-br from-slate-300 via-slate-200 to-slate-400">
                         <img src="images/industry/heavy-industry.jpg" alt="중공업" class="w-full h-auto block">
                         <i class="fa-solid fa-industry absolute left-3 top-3 sm:left-4 sm:top-4 text-base sm:text-lg text-slate-700"></i>
                         <h3 class="absolute left-3 bottom-3 sm:left-4 sm:bottom-4 text-sm sm:text-base font-extrabold text-slate-900">중공업</h3>
                     </div>
-                    <div class="relative overflow-hidden rounded-xl border border-slate-200 shadow-md bg-gradient-to-br from-slate-300 via-slate-200 to-slate-400">
+                    <div class="tilt-card relative overflow-hidden rounded-xl border border-slate-200 shadow-md bg-gradient-to-br from-slate-300 via-slate-200 to-slate-400">
                         <img src="images/industry/display.jpg" alt="디스플레이" class="w-full h-auto block">
                         <i class="fa-solid fa-desktop absolute left-3 top-3 sm:left-4 sm:top-4 text-base sm:text-lg text-slate-700"></i>
                         <h3 class="absolute left-3 bottom-3 sm:left-4 sm:bottom-4 text-sm sm:text-base font-extrabold text-slate-900">디스플레이</h3>
@@ -1079,6 +1081,24 @@
         if (statYearsEl) {
             statYearsEl.textContent = (new Date().getFullYear() - 1999) + '+';
         }
+
+        // 통계/Industry Applications 카드: 마우스 위치에 따라 입체적으로 기울어지는 틸트 효과
+        (function() {
+            const maxTilt = 10;
+            document.querySelectorAll('.tilt-card').forEach(function(card) {
+                card.addEventListener('mousemove', function(e) {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const rotateY = ((x - rect.width / 2) / (rect.width / 2)) * maxTilt;
+                    const rotateX = -((y - rect.height / 2) / (rect.height / 2)) * maxTilt;
+                    card.style.transform = `perspective(700px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.04, 1.04, 1.04)`;
+                });
+                card.addEventListener('mouseleave', function() {
+                    card.style.transform = '';
+                });
+            });
+        })();
 
         function switchPage(pageId) {
             document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
