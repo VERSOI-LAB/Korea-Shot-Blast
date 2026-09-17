@@ -1164,20 +1164,12 @@
             </div>
 
             <!-- 견적 문의 CTA -->
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
                 <div class="rounded-2xl p-8 sm:p-14 bg-slate-900 text-center relative overflow-hidden">
                     <h2 id="industryCtaTitle" class="text-2xl sm:text-3xl font-extrabold text-white mb-4 whitespace-pre-line"></h2>
                     <p id="industryCtaBody" class="text-slate-300 text-sm max-w-xl mx-auto mb-8 leading-relaxed"></p>
                     <button id="industryCtaBtn" class="bg-red-700 hover:bg-red-800 text-white px-8 py-3.5 rounded font-bold text-sm shadow transition"></button>
                 </div>
-            </div>
-
-            <!-- Related Industries -->
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
-                <div class="text-center mb-8">
-                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Related Industries</span>
-                </div>
-                <div id="industryRelatedGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4"></div>
             </div>
         </section>
 
@@ -1570,7 +1562,6 @@
         // ================= 산업별 솔루션 (Industry Applications) =================
         // 4개 산업 페이지는 완전히 다른 화면을 따로 만들지 않고, 아래 데이터를 하나의
         // 공통 템플릿(#page-industry)에 렌더링하는 방식으로 구성합니다.
-        const INDUSTRY_ORDER = ['semiconductor', 'nuclear', 'aerospace', 'display'];
 
         const PROCESS_STEPS = [
             { step: '01', eng: 'PRODUCT ANALYSIS', title: '제품 분석', desc: '제품 형상·소재·크기·생산량을 분석합니다.' },
@@ -1752,22 +1743,6 @@
             </div>`;
         }
 
-        function relatedCardHtml(slug) {
-            const ind = INDUSTRIES[slug];
-            const media = ind.heroImg
-                ? `<img src="${ind.heroImg}" alt="${ind.title}" class="absolute inset-0 w-full h-full object-cover">`
-                : `<div class="absolute inset-0 bg-gradient-to-br from-slate-800 via-slate-900 to-black"></div><i class="fa-solid ${ind.heroIcon} absolute inset-0 m-auto text-4xl text-white/20"></i>`;
-            const scrim = ind.heroImg ? 'bg-gradient-to-t from-white/90 via-white/10 to-transparent' : 'bg-gradient-to-t from-black/80 via-black/10 to-transparent';
-            const iconColor = ind.heroImg ? 'text-slate-700' : 'text-slate-300';
-            const textColor = ind.heroImg ? 'text-slate-900' : 'text-white';
-            return `<div onclick="openIndustryPage('${slug}')" class="group relative aspect-[4/3] overflow-hidden rounded-xl border border-slate-200 shadow-sm cursor-pointer">
-                ${media}
-                <div class="absolute inset-0 ${scrim}"></div>
-                <i class="fa-solid ${ind.heroIcon} absolute left-3 top-3 text-sm ${iconColor}"></i>
-                <h4 class="absolute left-3 bottom-3 text-sm font-extrabold ${textColor}">${ind.title}</h4>
-            </div>`;
-        }
-
         function openIndustryQuote(slug, fromCustomCard) {
             const ind = INDUSTRIES[slug] || INDUSTRIES[currentIndustrySlug];
             quoteInquiryContext = ind ? `[${ind.title}(${ind.eng})] 산업 분야 문의${fromCustomCard ? ' - 맞춤 설계 상담' : ''}` : null;
@@ -1803,8 +1778,6 @@
             const ctaBtn = document.getElementById('industryCtaBtn');
             ctaBtn.textContent = ind.cta.btn;
             ctaBtn.setAttribute('onclick', `openIndustryQuote('${ind.slug}')`);
-
-            document.getElementById('industryRelatedGrid').innerHTML = INDUSTRY_ORDER.filter(s => s !== ind.slug).map(relatedCardHtml).join('');
         }
 
         function openIndustryPage(slug) {
