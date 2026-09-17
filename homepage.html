@@ -110,7 +110,7 @@
                             <div class="max-w-7xl mx-auto px-8 sm:px-16 w-full text-white">
                                 <span class="text-xs font-bold text-red-400 uppercase tracking-widest mb-3 block">Global Leading Company</span>
                                 <h1 class="text-2xl sm:text-4xl md:text-5xl font-black tracking-tight mb-4">세계 최고 수준의<br>샌드 블라스팅 전문기업</h1>
-                                <p class="text-slate-200 text-sm sm:text-lg max-w-xl mb-6 font-light">반도체·디스플레이부터 중공업까지, 표면처리의 모든 영역에서 최적의 솔루션을 제공합니다.</p>
+                                <p class="text-slate-200 text-sm sm:text-lg max-w-xl mb-6 font-light">반도체·디스플레이부터 원자력·항공까지, 산업별 요구에 최적화된 표면처리 솔루션을 제공합니다.</p>
                                 <button onclick="switchPage('products')" class="bg-red-600 hover:bg-red-500 text-white px-6 sm:px-8 py-3 sm:py-3.5 rounded font-bold text-sm transition shadow-lg">장비 라인업 탐색하기</button>
                             </div>
                         </div>
@@ -198,27 +198,48 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
                 <div class="text-center mb-10">
                     <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-2">Industry Applications</h2>
+                    <p class="text-slate-500 text-sm">산업별 요구에 맞춘 표면처리 솔루션을 확인해보세요.</p>
                 </div>
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-                    <div class="tilt-card relative overflow-hidden rounded-xl border border-slate-200 shadow-md bg-gradient-to-br from-slate-300 via-slate-200 to-slate-400">
-                        <img src="images/industry/semiconductor.jpg" alt="반도체" class="w-full h-auto block">
+                    <div onclick="openIndustryPage('semiconductor')" class="tilt-card group relative aspect-[4/3] overflow-hidden rounded-xl border border-slate-200 shadow-md bg-gradient-to-br from-slate-300 via-slate-200 to-slate-400 cursor-pointer">
+                        <img src="images/industry/semiconductor.jpg" alt="반도체" class="absolute inset-0 w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-white/90 via-white/10 to-transparent"></div>
                         <i class="fa-solid fa-microchip absolute left-3 top-3 sm:left-4 sm:top-4 text-base sm:text-lg text-slate-700"></i>
-                        <h3 class="absolute left-3 bottom-3 sm:left-4 sm:bottom-4 text-sm sm:text-base font-extrabold text-slate-900">반도체</h3>
+                        <div class="absolute left-3 right-3 bottom-3 sm:left-4 sm:right-4 sm:bottom-4">
+                            <h3 class="text-sm sm:text-base font-extrabold text-slate-900">반도체</h3>
+                            <p class="hidden sm:block text-[11px] text-slate-600 font-semibold leading-snug mt-0.5">정밀 Deburring &amp; Surface Processing</p>
+                            <span class="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-bold text-red-700 mt-1">VIEW SOLUTION <i class="fa-solid fa-arrow-right text-[9px] transition group-hover:translate-x-0.5"></i></span>
+                        </div>
                     </div>
-                    <div class="tilt-card relative overflow-hidden rounded-xl border border-slate-200 shadow-md bg-gradient-to-br from-slate-300 via-slate-200 to-slate-400">
-                        <img src="images/industry/nuclear.jpg" alt="원자력" class="w-full h-auto block">
+                    <div onclick="openIndustryPage('nuclear')" class="tilt-card group relative aspect-[4/3] overflow-hidden rounded-xl border border-slate-200 shadow-md bg-gradient-to-br from-slate-300 via-slate-200 to-slate-400 cursor-pointer">
+                        <img src="images/industry/nuclear.jpg" alt="원자력" class="absolute inset-0 w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-white/90 via-white/10 to-transparent"></div>
                         <i class="fa-solid fa-atom absolute left-3 top-3 sm:left-4 sm:top-4 text-base sm:text-lg text-slate-700"></i>
-                        <h3 class="absolute left-3 bottom-3 sm:left-4 sm:bottom-4 text-sm sm:text-base font-extrabold text-slate-900">원자력</h3>
+                        <div class="absolute left-3 right-3 bottom-3 sm:left-4 sm:right-4 sm:bottom-4">
+                            <h3 class="text-sm sm:text-base font-extrabold text-slate-900">원자력</h3>
+                            <p class="hidden sm:block text-[11px] text-slate-600 font-semibold leading-snug mt-0.5">특수 소재 &amp; 정밀 부품 Processing</p>
+                            <span class="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-bold text-red-700 mt-1">VIEW SOLUTION <i class="fa-solid fa-arrow-right text-[9px] transition group-hover:translate-x-0.5"></i></span>
+                        </div>
                     </div>
-                    <div class="tilt-card relative overflow-hidden rounded-xl border border-slate-200 shadow-md bg-gradient-to-br from-slate-300 via-slate-200 to-slate-400">
-                        <img src="images/industry/heavy-industry.jpg" alt="중공업" class="w-full h-auto block">
-                        <i class="fa-solid fa-industry absolute left-3 top-3 sm:left-4 sm:top-4 text-base sm:text-lg text-slate-700"></i>
-                        <h3 class="absolute left-3 bottom-3 sm:left-4 sm:bottom-4 text-sm sm:text-base font-extrabold text-slate-900">중공업</h3>
+                    <div onclick="openIndustryPage('aerospace')" class="tilt-card group relative aspect-[4/3] overflow-hidden rounded-xl border border-slate-200 shadow-md bg-gradient-to-br from-slate-800 via-slate-900 to-black cursor-pointer">
+                        <i class="fa-solid fa-plane absolute inset-0 m-auto text-6xl sm:text-7xl text-white/10"></i>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent"></div>
+                        <i class="fa-solid fa-plane absolute left-3 top-3 sm:left-4 sm:top-4 text-base sm:text-lg text-slate-300"></i>
+                        <div class="absolute left-3 right-3 bottom-3 sm:left-4 sm:right-4 sm:bottom-4">
+                            <h3 class="text-sm sm:text-base font-extrabold text-white">항공</h3>
+                            <p class="hidden sm:block text-[11px] text-slate-300 font-semibold leading-snug mt-0.5">Peening &amp; Precision Surface Processing</p>
+                            <span class="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-bold text-red-400 mt-1">VIEW SOLUTION <i class="fa-solid fa-arrow-right text-[9px] transition group-hover:translate-x-0.5"></i></span>
+                        </div>
                     </div>
-                    <div class="tilt-card relative overflow-hidden rounded-xl border border-slate-200 shadow-md bg-gradient-to-br from-slate-300 via-slate-200 to-slate-400">
-                        <img src="images/industry/display.jpg" alt="디스플레이" class="w-full h-auto block">
+                    <div onclick="openIndustryPage('display')" class="tilt-card group relative aspect-[4/3] overflow-hidden rounded-xl border border-slate-200 shadow-md bg-gradient-to-br from-slate-300 via-slate-200 to-slate-400 cursor-pointer">
+                        <img src="images/industry/display.jpg" alt="디스플레이" class="absolute inset-0 w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-white/90 via-white/10 to-transparent"></div>
                         <i class="fa-solid fa-desktop absolute left-3 top-3 sm:left-4 sm:top-4 text-base sm:text-lg text-slate-700"></i>
-                        <h3 class="absolute left-3 bottom-3 sm:left-4 sm:bottom-4 text-sm sm:text-base font-extrabold text-slate-900">디스플레이</h3>
+                        <div class="absolute left-3 right-3 bottom-3 sm:left-4 sm:right-4 sm:bottom-4">
+                            <h3 class="text-sm sm:text-base font-extrabold text-slate-900">디스플레이</h3>
+                            <p class="hidden sm:block text-[11px] text-slate-600 font-semibold leading-snug mt-0.5">정밀 표면처리 &amp; Production Automation</p>
+                            <span class="inline-flex items-center gap-1 text-[10px] sm:text-[11px] font-bold text-red-700 mt-1">VIEW SOLUTION <i class="fa-solid fa-arrow-right text-[9px] transition group-hover:translate-x-0.5"></i></span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1065,6 +1086,101 @@
             </div>
         </section>
 
+        <!-- 8. 산업별 솔루션 (Industries) - 공통 템플릿, 내용은 JS 데이터로 렌더링 -->
+        <section id="page-industry" class="page-section">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+                <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-2">
+                    <div class="flex items-center gap-2 text-xs text-slate-500">
+                        <span><i class="fa-solid fa-house"></i> HOME</span>
+                        <span>&gt;</span>
+                        <button onclick="switchPage('home')" class="hover:text-red-700 font-semibold">Industry Applications</button>
+                        <span>&gt;</span>
+                        <span id="industryBreadcrumb" class="text-slate-900 font-semibold">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HERO -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 mb-16">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                    <div>
+                        <span class="text-xs font-bold text-red-700 uppercase tracking-widest mb-3 block">Industry Application</span>
+                        <h1 id="industryHeroTitle" class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight mb-1"></h1>
+                        <p id="industryHeroEng" class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-5"></p>
+                        <p id="industryHeroHeadline" class="text-lg sm:text-xl font-extrabold text-slate-900 mb-4 leading-snug whitespace-pre-line"></p>
+                        <p id="industryHeroDesc" class="text-slate-600 text-sm sm:text-base leading-relaxed mb-8"></p>
+                        <div class="flex flex-wrap gap-3">
+                            <button id="industryHeroCtaBtn" class="bg-red-700 hover:bg-red-800 text-white px-6 sm:px-8 py-3 sm:py-3.5 rounded font-bold text-sm transition shadow-lg"></button>
+                            <button onclick="switchPage('products')" class="bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 px-6 sm:px-8 py-3 sm:py-3.5 rounded font-bold text-sm transition">적용 장비 보기</button>
+                        </div>
+                    </div>
+                    <div id="industryHeroMedia" class="relative aspect-[4/3] rounded-2xl overflow-hidden border border-slate-200 shadow-md"></div>
+                </div>
+            </div>
+
+            <!-- 산업 소개 -->
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 text-center">
+                <span id="industryOverviewEyebrow" class="text-xs font-bold text-red-700 uppercase tracking-widest mb-2 block"></span>
+                <h2 id="industryOverviewTitle" class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-4 whitespace-pre-line"></h2>
+                <p id="industryOverviewBody" class="text-slate-600 text-sm sm:text-base leading-relaxed whitespace-pre-line"></p>
+            </div>
+
+            <!-- 주요 표면처리 과제 -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+                <div class="text-center mb-10">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 block">Key Challenges</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-2">주요 표면처리 과제</h2>
+                </div>
+                <div id="industryApplicationsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+            </div>
+
+            <!-- 공정 / 적용 프로세스 -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+                <div class="text-center mb-10">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 block">Our Process</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-2">제품에 맞는 공정과 장비를 설계합니다</h2>
+                </div>
+                <div id="industryProcessGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6"></div>
+            </div>
+
+            <!-- 적용 장비 -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+                <div class="text-center mb-10">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 block">Equipment</span>
+                    <h2 id="industryEquipmentTitle" class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-2"></h2>
+                </div>
+                <div id="industryEquipmentGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+            </div>
+
+            <!-- 기술 포인트 / 대응 경험 -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+                <div class="rounded-2xl p-6 sm:p-12 bg-slate-50 border border-slate-200">
+                    <div class="text-center mb-10">
+                        <span class="text-xs font-bold text-red-700 uppercase tracking-widest mb-2 block">Track Record</span>
+                        <h2 id="industryExperienceTitle" class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-2"></h2>
+                    </div>
+                    <div id="industryExperienceGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6"></div>
+                </div>
+            </div>
+
+            <!-- 견적 문의 CTA -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+                <div class="rounded-2xl p-8 sm:p-14 bg-slate-900 text-center relative overflow-hidden">
+                    <h2 id="industryCtaTitle" class="text-2xl sm:text-3xl font-extrabold text-white mb-4 whitespace-pre-line"></h2>
+                    <p id="industryCtaBody" class="text-slate-300 text-sm max-w-xl mx-auto mb-8 leading-relaxed"></p>
+                    <button id="industryCtaBtn" class="bg-red-700 hover:bg-red-800 text-white px-8 py-3.5 rounded font-bold text-sm shadow transition"></button>
+                </div>
+            </div>
+
+            <!-- Related Industries -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
+                <div class="text-center mb-8">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Related Industries</span>
+                </div>
+                <div id="industryRelatedGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4"></div>
+            </div>
+        </section>
+
     </main>
 
     <!-- Footer -->
@@ -1449,6 +1565,254 @@
 
             // 상세 페이지 화면으로 전환
             switchPage('product-detail');
+        }
+
+        // ================= 산업별 솔루션 (Industry Applications) =================
+        // 4개 산업 페이지는 완전히 다른 화면을 따로 만들지 않고, 아래 데이터를 하나의
+        // 공통 템플릿(#page-industry)에 렌더링하는 방식으로 구성합니다.
+        const INDUSTRY_ORDER = ['semiconductor', 'nuclear', 'aerospace', 'display'];
+
+        const PROCESS_STEPS = [
+            { step: '01', eng: 'PRODUCT ANALYSIS', title: '제품 분석', desc: '제품 형상·소재·크기·생산량을 분석합니다.' },
+            { step: '02', eng: 'PROCESS DESIGN', title: '공정 설계', desc: '목표 표면상태에 맞는 가공조건을 설계합니다.' },
+            { step: '03', eng: 'EQUIPMENT', title: '장비 구성', desc: '제품에 맞는 Blast 장비를 구성합니다.' },
+            { step: '04', eng: 'AUTOMATION', title: '자동화 적용', desc: '반복공정 및 생산라인을 자동화합니다.' }
+        ];
+
+        const INDUSTRIES = {
+            semiconductor: {
+                slug: 'semiconductor', title: '반도체', eng: 'SEMICONDUCTOR', heroIcon: 'fa-microchip',
+                heroImg: 'images/industry/semiconductor.jpg',
+                headline: '미세한 표면처리부터 정밀 Deburring까지,\n반도체 제조환경에 맞춘 표면처리 솔루션',
+                desc: '반도체 및 전자부품의 형상과 공정 특성에 맞춰 정밀한 표면처리와 자동화 시스템을 설계·제작합니다.',
+                overviewEyebrow: 'SEMICONDUCTOR SURFACE PROCESSING',
+                overviewTitle: '정밀한 부품일수록\n표면처리의 정밀도가 중요합니다',
+                overviewBody: '반도체 및 전자부품은 작은 Burr와 표면 상태의 차이도 후공정 품질에 영향을 줄 수 있습니다.\n한국브라스트는 부품의 형상과 가공 조건에 맞춰 Sand Blast, Deburring, Micro Blast 및 자동화 설비를 구성하여 생산공정에 맞는 표면처리 시스템을 제안합니다.',
+                applications: [
+                    { icon: 'fa-broom', eng: 'DEBURRING', title: '미세 Burr 제거', desc: '가공 과정에서 발생하는 Burr와 잔여물을 제거하여 후공정에 적합한 표면 상태를 구현합니다.' },
+                    { icon: 'fa-wand-magic-sparkles', eng: 'MICRO BLASTING', title: '미세 부품 정밀 표면처리', desc: '작은 부품과 정밀한 형상에 대응할 수 있는 Micro Blast 기반 표면처리 시스템을 구성합니다.' },
+                    { icon: 'fa-layer-group', eng: 'SURFACE FINISHING', title: '균일한 표면처리', desc: '제품의 형상과 소재에 맞춰 균일한 표면처리 조건을 설계합니다.' },
+                    { icon: 'fa-robot', eng: 'AUTOMATION', title: '반복 공정 자동화', desc: '컨베어, 인덱스 및 자동화 설비를 활용하여 반복적인 표면처리 공정을 자동화합니다.' }
+                ],
+                equipment: [
+                    { name: 'MICRO BLASTER', eng: '정밀 부품을 위한 Micro Blast 시스템', cat: 'micro' },
+                    { name: 'ROBOT BLASTER', eng: '복잡한 형상과 반복 공정을 위한 자동화 시스템', cat: 'robot' },
+                    { name: 'PEENING M/C', eng: '정밀 부품의 표면처리를 위한 Peening 시스템', cat: 'peening' },
+                    { name: 'INDEX 장비', eng: '생산라인 연계형 자동화 장비', cat: 'suction', sub: 'index' }
+                ],
+                experienceTitle: '반도체·전자부품 분야의 축적된 기술',
+                experience: [
+                    { year: '1997', title: '반도체 Lead Frame Deburring M/C 개발', desc: '창립 초기부터 반도체 부품 전용 Deburring 설비를 개발해 왔습니다.' },
+                    { year: '2014~2015', title: '삼성전자 베트남 Metal Blasting 장비 130대 공급', desc: '휴대폰 외면 표면처리용 장비를 대량 공급한 경험을 보유하고 있습니다.' }
+                ],
+                cta: { title: '반도체 부품의 표면처리 공정을\n상담해보세요.', body: '제품 크기, 소재, 생산량, 원하는 표면 상태를 알려주시면 적용 가능한 공정과 장비를 검토해드립니다.', btn: '견적 문의하기' }
+            },
+            nuclear: {
+                slug: 'nuclear', title: '원자력', eng: 'NUCLEAR', heroIcon: 'fa-atom',
+                heroImg: 'images/industry/nuclear.jpg',
+                headline: '원자력 산업을 위한\n특수 표면처리 설비',
+                desc: '특수 소재와 정밀한 형상을 가진 부품의 표면처리 공정을 위한 장비를 설계·제작합니다.',
+                overviewEyebrow: 'NUCLEAR SURFACE PROCESSING',
+                overviewTitle: '특수 소재와 정밀 부품에 맞춘\n표면처리 시스템',
+                overviewBody: '원자력 관련 제조공정에서는 부품의 소재와 형상, 표면 상태에 맞는 정밀한 공정 설계가 중요합니다.\n한국브라스트는 지르코늄 튜브 관련 설비를 비롯하여 제품의 요구조건에 맞는 표면처리 및 전용 설비를 개발해 왔습니다.',
+                applications: [
+                    { icon: 'fa-water', eng: 'TUBE PROCESSING', title: '튜브 표면처리', desc: '튜브의 형상과 가공 조건을 고려한 내·외면 표면처리 설비를 구성합니다.' },
+                    { icon: 'fa-bullseye', eng: 'PRECISION FINISHING', title: '정밀 표면 가공', desc: '요구되는 표면 상태에 맞춰 가공 조건과 장비 구성을 설계합니다.' },
+                    { icon: 'fa-flask', eng: 'CLEANING', title: '표면 세정', desc: '가공 이후 필요한 세정 및 표면처리 공정에 대응합니다.' },
+                    { icon: 'fa-drafting-compass', eng: 'CUSTOM EQUIPMENT', title: '전용 설비', desc: '표준장비로 대응하기 어려운 특수 제품은 제품 형상과 공정에 맞춘 전용설비를 설계합니다.' }
+                ],
+                equipment: [
+                    { name: 'WET BLASTER', eng: '분진 없는 습식 표면처리·세정 시스템', cat: 'wet' },
+                    { name: '집진기', eng: '분진·제염 환경을 위한 집진 설비', cat: 'collector' },
+                    { name: 'CUSTOM ENGINEERING', eng: '제품 전용 특수 설비 설계·제작 상담', custom: true }
+                ],
+                experienceTitle: '원자력 관련 설비 개발 경험',
+                experience: [
+                    { year: '2016', title: '지르코늄 튜브 제조용 장비 공급', desc: '한전원자력연료에 지르코늄 튜브 제조용 장비를 공급 완료했습니다.' },
+                    { year: '2006~2007', title: '지르코늄 튜브 내면 연마 설비 개발', desc: '한전원자력 과제로 자동·수동 튜브 내면 연마설비를 개발했습니다.' },
+                    { year: '2006~2007', title: '플러쉬 피클러(튜브 내면 세척 장비) 개발', desc: '지르코늄 튜브 내면 세척을 위한 전용 설비를 개발했습니다.' },
+                    { year: '2010~2011', title: '국내 최초 해외수출장비(중국) 수주·납품', desc: '한전원자력연료 관련 설비를 국내 최초로 해외에 수출했습니다.' }
+                ],
+                cta: { title: '특수 부품의 표면처리 설비를\n함께 설계합니다.', body: '제품 형상과 소재, 가공 목적을 알려주시면 적용 가능한 표면처리 방식과 설비 구성을 검토합니다.', btn: '기술 상담 문의' }
+            },
+            aerospace: {
+                slug: 'aerospace', title: '항공', eng: 'AEROSPACE', heroIcon: 'fa-plane',
+                heroImg: null,
+                headline: '항공 부품을 위한\n정밀 표면처리 솔루션',
+                desc: '복잡한 형상과 높은 정밀도를 요구하는 항공 부품을 위해 Peening 및 Blast 기반의 표면처리 설비를 설계합니다.',
+                overviewEyebrow: 'AEROSPACE SURFACE PROCESSING',
+                overviewTitle: '항공 부품의 형상과 공정에 맞춘\n정밀 표면처리',
+                overviewBody: '항공 부품은 부품 형상과 소재, 가공 목적에 따라 정밀하고 균일한 표면처리 공정이 요구됩니다.\n한국브라스트는 제품의 형상과 공정 조건을 검토하여 Blast 및 Peening 기반의 전용 설비를 구성합니다.',
+                applications: [
+                    { icon: 'fa-bullseye', eng: 'SHOT PEENING', title: 'Shot Peening', desc: '금속 부품의 표면에 투사재를 분사하여 요구되는 표면처리 공정을 수행합니다.' },
+                    { icon: 'fa-gauge-high', eng: 'PRECISION BLASTING', title: '정밀 Blasting', desc: '부품 형상과 요구 조건에 맞춰 Blast 조건과 노즐 위치를 설계합니다.' },
+                    { icon: 'fa-robot', eng: 'ROBOT BLASTER', title: '복잡 형상 자동화', desc: '복잡한 형상의 부품에 대응하는 로봇 기반 자동화 표면처리 설비를 구성합니다.' },
+                    { icon: 'fa-arrows-rotate', eng: 'AUTOMATION', title: '반복 공정 자동화', desc: '반복되는 작업을 로봇 및 자동화 시스템과 연계하여 일관된 공정 운영을 지원합니다.' }
+                ],
+                equipment: [
+                    { name: 'PEENING M/C', eng: 'Shot Peening 공정을 위한 전용 설비', cat: 'peening' },
+                    { name: 'ROBOT BLASTER', eng: '복잡한 형상의 자동 표면처리 시스템', cat: 'robot' },
+                    { name: 'CUSTOM AUTOMATION', eng: '제품 및 생산조건에 맞춘 전용 자동화 상담', custom: true }
+                ],
+                experienceTitle: '항공 부품 표면처리를 위한 기술 역량',
+                experience: [
+                    { year: '', title: '초정밀 제어 기술', desc: '미세한 오차도 허용하지 않는 정밀 부품 전용 Peening·Blast 제어 기술을 보유하고 있습니다.' },
+                    { year: '', title: '로봇 기반 자동화', desc: '복잡한 형상에도 대응 가능한 Robot Blaster로 일관된 표면처리 품질을 구현합니다.' }
+                ],
+                cta: { title: '항공 부품의 Peening 및 Blast 공정을\n엔지니어와 상담해보세요.', body: '제품 형상, 소재, 가공 목적 및 생산조건을 바탕으로 적용 가능한 공정과 장비를 검토합니다.', btn: '항공 부품 상담' }
+            },
+            display: {
+                slug: 'display', title: '디스플레이', eng: 'DISPLAY', heroIcon: 'fa-desktop',
+                heroImg: 'images/industry/display.jpg',
+                headline: '디스플레이 제조를 위한\n정밀 표면처리 자동화',
+                desc: '디스플레이 부품의 형상과 생산공정에 맞춰 표면처리, Deburring 및 자동화 설비를 설계·제작합니다.',
+                overviewEyebrow: 'DISPLAY SURFACE PROCESSING',
+                overviewTitle: '디스플레이 부품의\n균일한 표면처리를 위한 솔루션',
+                overviewBody: '디스플레이 및 전자부품은 제품의 외관과 기능에 영향을 줄 수 있는 표면 상태와 가공 품질의 균일성이 중요합니다.\n한국브라스트는 제품 형상과 생산량을 고려하여 단독 장비부터 자동화 생산라인까지 맞춤형 설비를 구성합니다.',
+                applications: [
+                    { icon: 'fa-broom', eng: 'DEBURRING', title: 'Burr 제거', desc: '가공 후 발생하는 Burr 및 잔여물을 제거합니다.' },
+                    { icon: 'fa-layer-group', eng: 'SURFACE FINISHING', title: '표면 마감', desc: '제품 요구조건에 맞는 표면 상태를 구현합니다.' },
+                    { icon: 'fa-bullseye', eng: 'PRECISION PROCESSING', title: '정밀 가공', desc: '부품 형상에 맞춰 Blast 조건을 설계합니다.' },
+                    { icon: 'fa-robot', eng: 'AUTOMATION', title: '생산라인 자동화', desc: '컨베어 및 인덱스 장비와 연계하여 반복 공정을 자동화합니다.' }
+                ],
+                equipment: [
+                    { name: 'MICRO BLASTER', eng: '정밀 부품을 위한 Micro Blast 시스템', cat: 'micro' },
+                    { name: 'ROBOT BLASTER', eng: '복잡한 형상의 자동 표면처리', cat: 'robot' },
+                    { name: '컨베어 장비', eng: '연속 생산라인 연계형 표면처리 장비', cat: 'suction', sub: 'conveyor' },
+                    { name: '인덱스 장비', eng: '반복 정밀 가공을 위한 인덱스 장비', cat: 'suction', sub: 'index' }
+                ],
+                experienceTitle: '디스플레이·모바일 부품 분야 개발 경험',
+                experience: [
+                    { year: '2014~2015', title: '모바일 메탈 프레임 Blast 가공장치 개발', desc: '모바일 기기 외관 금속 프레임 전용 표면처리 장치를 개발했습니다. (특허 제10-1613377호)' },
+                    { year: '2012~2013', title: '플라스틱 사출물 Deburring/Buffing 자동화', desc: '휴대폰 플라스틱 사출물의 Burr·Parting Line 제거 및 광택 공정을 연속 자동화하는 설비를 개발했습니다.' }
+                ],
+                cta: { title: '디스플레이 생산라인에 맞는\n표면처리 시스템을 설계합니다.', body: '제품 크기와 소재, 생산량, 처리 방식 등의 정보를 보내주시면 적합한 장비와 공정을 검토해드립니다.', btn: '자동화 설비 문의' }
+            }
+        };
+
+        let currentIndustrySlug = null;
+
+        function heroMediaHtml(ind) {
+            if (ind.heroImg) {
+                return `<img src="${ind.heroImg}" alt="${ind.title}" class="absolute inset-0 w-full h-full object-cover" style="object-position:70% 50%;">`;
+            }
+            return `<div class="absolute inset-0 bg-gradient-to-br from-slate-800 via-slate-900 to-black flex items-center justify-center">
+                <i class="fa-solid ${ind.heroIcon} text-white/10 text-[9rem] absolute"></i>
+                <i class="fa-solid ${ind.heroIcon} relative text-white/80 text-6xl"></i>
+            </div>`;
+        }
+
+        function appCardHtml(a, idx) {
+            return `<div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="text-2xl font-black text-red-700/20">0${idx + 1}</span>
+                    <i class="fa-solid ${a.icon} text-red-700 text-lg"></i>
+                </div>
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">${a.eng}</span>
+                <h3 class="text-base font-bold text-slate-900 mt-1 mb-2">${a.title}</h3>
+                <p class="text-slate-600 text-xs leading-relaxed">${a.desc}</p>
+            </div>`;
+        }
+
+        function processCardHtml(p) {
+            return `<div class="relative bg-slate-50 p-6 rounded-2xl border border-slate-200 text-center">
+                <div class="w-10 h-10 mx-auto bg-slate-900 text-white rounded-full flex items-center justify-center font-black text-sm mb-4">${p.step}</div>
+                <span class="text-[10px] font-bold text-red-700 uppercase tracking-widest">${p.eng}</span>
+                <h3 class="text-base font-bold text-slate-900 mt-1 mb-2">${p.title}</h3>
+                <p class="text-slate-500 text-xs leading-relaxed">${p.desc}</p>
+            </div>`;
+        }
+
+        function equipmentCardHtml(item, slug) {
+            let action;
+            if (item.custom) {
+                action = "openIndustryQuote('" + slug + "', true)";
+            } else {
+                action = "switchPage('products'); switchMainProduct('" + item.cat + "');";
+                if (item.sub) action += " switchProdSub('" + item.cat + "','" + item.sub + "');";
+            }
+            return `<div class="bg-slate-50 hover:bg-white p-6 rounded-2xl border border-slate-200 hover:border-red-700 hover:shadow-md transition cursor-pointer" onclick="${action}">
+                <div class="w-10 h-10 bg-red-700 text-white rounded flex items-center justify-center font-bold text-base mb-4"><i class="fa-solid fa-gear"></i></div>
+                <h3 class="text-base font-bold text-slate-900 mb-2">${item.name}</h3>
+                <p class="text-slate-600 text-xs leading-relaxed mb-4">${item.eng}</p>
+                <span class="text-xs font-bold text-red-700">${item.custom ? '상담 문의' : '자세히 보기'} &rarr;</span>
+            </div>`;
+        }
+
+        function experienceCardHtml(e) {
+            const badge = e.year
+                ? `<span class="flex-shrink-0 font-black text-red-700 text-sm w-20">${e.year}</span>`
+                : `<span class="flex-shrink-0 text-red-700 text-lg w-10"><i class="fa-solid fa-star"></i></span>`;
+            return `<div class="bg-white p-6 rounded-xl border border-slate-200 flex gap-4">
+                ${badge}
+                <div>
+                    <h4 class="font-bold text-slate-900 text-sm mb-1">${e.title}</h4>
+                    <p class="text-slate-500 text-xs leading-relaxed">${e.desc}</p>
+                </div>
+            </div>`;
+        }
+
+        function relatedCardHtml(slug) {
+            const ind = INDUSTRIES[slug];
+            const media = ind.heroImg
+                ? `<img src="${ind.heroImg}" alt="${ind.title}" class="absolute inset-0 w-full h-full object-cover">`
+                : `<div class="absolute inset-0 bg-gradient-to-br from-slate-800 via-slate-900 to-black"></div><i class="fa-solid ${ind.heroIcon} absolute inset-0 m-auto text-4xl text-white/20"></i>`;
+            const scrim = ind.heroImg ? 'bg-gradient-to-t from-white/90 via-white/10 to-transparent' : 'bg-gradient-to-t from-black/80 via-black/10 to-transparent';
+            const iconColor = ind.heroImg ? 'text-slate-700' : 'text-slate-300';
+            const textColor = ind.heroImg ? 'text-slate-900' : 'text-white';
+            return `<div onclick="openIndustryPage('${slug}')" class="group relative aspect-[4/3] overflow-hidden rounded-xl border border-slate-200 shadow-sm cursor-pointer">
+                ${media}
+                <div class="absolute inset-0 ${scrim}"></div>
+                <i class="fa-solid ${ind.heroIcon} absolute left-3 top-3 text-sm ${iconColor}"></i>
+                <h4 class="absolute left-3 bottom-3 text-sm font-extrabold ${textColor}">${ind.title}</h4>
+            </div>`;
+        }
+
+        function openIndustryQuote(slug, fromCustomCard) {
+            const ind = INDUSTRIES[slug] || INDUSTRIES[currentIndustrySlug];
+            quoteInquiryContext = ind ? `[${ind.title}(${ind.eng})] 산업 분야 문의${fromCustomCard ? ' - 맞춤 설계 상담' : ''}` : null;
+            openModal('quoteModal');
+        }
+
+        function renderIndustryPage(ind) {
+            document.getElementById('industryBreadcrumb').textContent = ind.title;
+            document.getElementById('industryHeroTitle').textContent = ind.title;
+            document.getElementById('industryHeroEng').textContent = ind.eng;
+            document.getElementById('industryHeroHeadline').textContent = ind.headline;
+            document.getElementById('industryHeroDesc').textContent = ind.desc;
+            const heroBtn = document.getElementById('industryHeroCtaBtn');
+            heroBtn.textContent = ind.cta.btn;
+            heroBtn.setAttribute('onclick', `openIndustryQuote('${ind.slug}')`);
+            document.getElementById('industryHeroMedia').innerHTML = heroMediaHtml(ind);
+
+            document.getElementById('industryOverviewEyebrow').textContent = ind.overviewEyebrow;
+            document.getElementById('industryOverviewTitle').textContent = ind.overviewTitle;
+            document.getElementById('industryOverviewBody').textContent = ind.overviewBody;
+
+            document.getElementById('industryApplicationsGrid').innerHTML = ind.applications.map(appCardHtml).join('');
+            document.getElementById('industryProcessGrid').innerHTML = PROCESS_STEPS.map(processCardHtml).join('');
+
+            document.getElementById('industryEquipmentTitle').textContent = ind.eng + ' SOLUTIONS';
+            document.getElementById('industryEquipmentGrid').innerHTML = ind.equipment.map(item => equipmentCardHtml(item, ind.slug)).join('');
+
+            document.getElementById('industryExperienceTitle').textContent = ind.experienceTitle;
+            document.getElementById('industryExperienceGrid').innerHTML = ind.experience.map(experienceCardHtml).join('');
+
+            document.getElementById('industryCtaTitle').textContent = ind.cta.title;
+            document.getElementById('industryCtaBody').textContent = ind.cta.body;
+            const ctaBtn = document.getElementById('industryCtaBtn');
+            ctaBtn.textContent = ind.cta.btn;
+            ctaBtn.setAttribute('onclick', `openIndustryQuote('${ind.slug}')`);
+
+            document.getElementById('industryRelatedGrid').innerHTML = INDUSTRY_ORDER.filter(s => s !== ind.slug).map(relatedCardHtml).join('');
+        }
+
+        function openIndustryPage(slug) {
+            const ind = INDUSTRIES[slug];
+            if (!ind) return;
+            currentIndustrySlug = slug;
+            renderIndustryPage(ind);
+            switchPage('industry');
         }
 
         async function handleFormSubmit(event, modalId) {
