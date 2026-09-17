@@ -1732,12 +1732,12 @@
         }
 
         function experienceCardHtml(e) {
-            const badge = e.year
-                ? `<span class="flex-shrink-0 font-black text-red-700 text-sm w-20">${e.year}</span>`
-                : `<span class="flex-shrink-0 text-red-700 text-lg w-10"><i class="fa-solid fa-star"></i></span>`;
+            const badge = `<span class="flex-shrink-0 w-10 h-10 rounded-full bg-red-700 text-white flex items-center justify-center text-sm"><i class="fa-solid fa-circle-check"></i></span>`;
+            const yearLabel = e.year ? `<span class="block text-[11px] font-bold text-slate-400 tracking-wide mb-0.5">${e.year}</span>` : '';
             return `<div class="bg-white p-6 rounded-xl border border-slate-200 flex gap-4">
                 ${badge}
                 <div>
+                    ${yearLabel}
                     <h4 class="font-bold text-slate-900 text-sm mb-1">${e.title}</h4>
                     <p class="text-slate-500 text-xs leading-relaxed">${e.desc}</p>
                 </div>
