@@ -1113,11 +1113,7 @@
                         <h1 id="industryHeroTitle" class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight mb-1"></h1>
                         <p id="industryHeroEng" class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-5"></p>
                         <p id="industryHeroHeadline" class="text-lg sm:text-xl font-extrabold text-slate-900 mb-4 leading-snug whitespace-pre-line"></p>
-                        <p id="industryHeroDesc" class="text-slate-600 text-sm sm:text-base leading-relaxed mb-8"></p>
-                        <div class="flex flex-wrap gap-3">
-                            <button id="industryHeroCtaBtn" class="bg-red-700 hover:bg-red-800 text-white px-6 sm:px-8 py-3 sm:py-3.5 rounded font-bold text-sm transition shadow-lg"></button>
-                            <button onclick="switchPage('products')" class="bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 px-6 sm:px-8 py-3 sm:py-3.5 rounded font-bold text-sm transition">적용 장비 보기</button>
-                        </div>
+                        <p id="industryHeroDesc" class="text-slate-600 text-sm sm:text-base leading-relaxed"></p>
                     </div>
                     <div id="industryHeroMedia" class="relative aspect-[4/3] rounded-2xl overflow-hidden border border-slate-200 shadow-md"></div>
                 </div>
@@ -1771,9 +1767,6 @@
             document.getElementById('industryHeroEng').textContent = ind.eng;
             document.getElementById('industryHeroHeadline').textContent = ind.headline;
             document.getElementById('industryHeroDesc').textContent = ind.desc;
-            const heroBtn = document.getElementById('industryHeroCtaBtn');
-            heroBtn.textContent = ind.cta.btn;
-            heroBtn.setAttribute('onclick', `openIndustryQuote('${ind.slug}')`);
             document.getElementById('industryHeroMedia').innerHTML = heroMediaHtml(ind);
 
             document.getElementById('industryOverviewEyebrow').textContent = ind.overviewEyebrow;
