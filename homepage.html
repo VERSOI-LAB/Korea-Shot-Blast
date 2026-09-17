@@ -1154,7 +1154,7 @@
                     <span class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 block">Equipment</span>
                     <h2 id="industryEquipmentTitle" class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-2"></h2>
                 </div>
-                <div id="industryEquipmentGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+                <div id="industryEquipmentGrid" class="flex flex-wrap justify-center gap-6"></div>
             </div>
 
             <!-- 기술 포인트 / 대응 경험 -->
@@ -1592,9 +1592,7 @@
                 ],
                 equipment: [
                     { name: 'MICRO BLASTER', eng: '정밀 부품을 위한 Micro Blast 시스템', cat: 'micro' },
-                    { name: 'ROBOT BLASTER', eng: '복잡한 형상과 반복 공정을 위한 자동화 시스템', cat: 'robot' },
-                    { name: 'PEENING M/C', eng: '정밀 부품의 표면처리를 위한 Peening 시스템', cat: 'peening' },
-                    { name: 'INDEX 장비', eng: '생산라인 연계형 자동화 장비', cat: 'suction', sub: 'index' }
+                    { name: 'ROBOT BLASTER', eng: '복잡한 형상과 반복 공정을 위한 자동화 시스템', cat: 'robot' }
                 ],
                 experienceTitle: '반도체·전자부품 분야의 축적된 기술',
                 experience: [
@@ -1618,9 +1616,7 @@
                     { icon: 'fa-drafting-compass', eng: 'CUSTOM EQUIPMENT', title: '전용 설비', desc: '표준장비로 대응하기 어려운 특수 제품은 제품 형상과 공정에 맞춘 전용설비를 설계합니다.' }
                 ],
                 equipment: [
-                    { name: 'WET BLASTER', eng: '분진 없는 습식 표면처리·세정 시스템', cat: 'wet' },
-                    { name: '집진기', eng: '분진·제염 환경을 위한 집진 설비', cat: 'collector' },
-                    { name: 'CUSTOM ENGINEERING', eng: '제품 전용 특수 설비 설계·제작 상담', custom: true }
+                    { name: 'CUSTOM ENGINEERING', eng: '제품 전용 특수 설비 설계·제작 상담', product: 'PRM-P-2200' }
                 ],
                 experienceTitle: '원자력 관련 설비 개발 경험',
                 experience: [
@@ -1674,8 +1670,7 @@
                 equipment: [
                     { name: 'MICRO BLASTER', eng: '정밀 부품을 위한 Micro Blast 시스템', cat: 'micro' },
                     { name: 'ROBOT BLASTER', eng: '복잡한 형상의 자동 표면처리', cat: 'robot' },
-                    { name: '컨베어 장비', eng: '연속 생산라인 연계형 표면처리 장비', cat: 'suction', sub: 'conveyor' },
-                    { name: '인덱스 장비', eng: '반복 정밀 가공을 위한 인덱스 장비', cat: 'suction', sub: 'index' }
+                    { name: '컨베어 장비', eng: '연속 생산라인 연계형 표면처리 장비', cat: 'suction', sub: 'conveyor' }
                 ],
                 experienceTitle: '디스플레이·모바일 부품 분야 개발 경험',
                 experience: [
@@ -1720,18 +1715,23 @@
         }
 
         function equipmentCardHtml(item, slug) {
-            let action;
-            if (item.custom) {
+            let action, label;
+            if (item.product) {
+                action = "openProductByName('" + item.product + "')";
+                label = '자세히 보기';
+            } else if (item.custom) {
                 action = "openIndustryQuote('" + slug + "', true)";
+                label = '상담 문의';
             } else {
                 action = "switchPage('products'); switchMainProduct('" + item.cat + "');";
                 if (item.sub) action += " switchProdSub('" + item.cat + "','" + item.sub + "');";
+                label = '자세히 보기';
             }
-            return `<div class="bg-slate-50 hover:bg-white p-6 rounded-2xl border border-slate-200 hover:border-red-700 hover:shadow-md transition cursor-pointer" onclick="${action}">
+            return `<div class="w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] bg-slate-50 hover:bg-white p-6 rounded-2xl border border-slate-200 hover:border-red-700 hover:shadow-md transition cursor-pointer" onclick="${action}">
                 <div class="w-10 h-10 bg-red-700 text-white rounded flex items-center justify-center font-bold text-base mb-4"><i class="fa-solid fa-gear"></i></div>
                 <h3 class="text-base font-bold text-slate-900 mb-2">${item.name}</h3>
                 <p class="text-slate-600 text-xs leading-relaxed mb-4">${item.eng}</p>
-                <span class="text-xs font-bold text-red-700">${item.custom ? '상담 문의' : '자세히 보기'} &rarr;</span>
+                <span class="text-xs font-bold text-red-700">${label} &rarr;</span>
             </div>`;
         }
 
@@ -1752,6 +1752,17 @@
             const ind = INDUSTRIES[slug] || INDUSTRIES[currentIndustrySlug];
             quoteInquiryContext = ind ? `[${ind.title}(${ind.eng})] 산업 분야 문의${fromCustomCard ? ' - 맞춤 설계 상담' : ''}` : null;
             openModal('quoteModal');
+        }
+
+        // 산업 페이지 장비 카드에서 특정 제품(이름 기준)의 상세페이지로 바로 이동
+        function openProductByName(name) {
+            const go = () => {
+                const p = productsCatalog.find(x => x.name === name);
+                if (p) { openCatalogProduct(p.id); }
+                else { switchPage('products'); }
+            };
+            if (productsCatalog.length) go();
+            else setTimeout(go, 600); // 최초 제품 목록 로딩이 아직 끝나지 않은 경우 대비
         }
 
         function renderIndustryPage(ind) {
