@@ -1815,9 +1815,12 @@
                 let file_url = null;
                 const file = fd.get('file');
                 if (file && file.size > 0) {
-                    const path = `${type}/${Date.now()}_${file.name}`;
+                    const extMatch = file.name.match(/\.[^.]+$/);
+                    const ext = extMatch ? extMatch[0] : '';
+                    const path = `${type}/${Date.now()}${ext}`;
                     const { error: upErr } = await sb.storage.from('inquiry-files').upload(path, file);
                     if (!upErr) file_url = path;
+                    else console.error('파일 업로드 실패:', upErr);
                 }
 
                 const payload = {
