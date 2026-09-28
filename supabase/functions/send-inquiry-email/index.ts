@@ -76,11 +76,22 @@ function buildEmailHtml(type: string, payload: Record<string, unknown>): string 
     )
     .join("");
 
-  const fileRow = payload.file_url
+  const fileUrls = Array.isArray(payload.file_url)
+    ? payload.file_url
+    : payload.file_url
+    ? [payload.file_url]
+    : [];
+
+  const fileRow = fileUrls.length
     ? `<tr>
-        <td style="padding:12px 16px;background:#f8fafc;border-bottom:1px solid #e2e8f0;font-weight:700;font-size:13px;color:#475569;white-space:nowrap;">첨부파일</td>
+        <td style="padding:12px 16px;background:#f8fafc;border-bottom:1px solid #e2e8f0;font-weight:700;font-size:13px;color:#475569;white-space:nowrap;vertical-align:top;">첨부파일</td>
         <td style="padding:12px 16px;border-bottom:1px solid #e2e8f0;font-size:14px;">
-          <a href="https://zaajbkjzpzwxdinnrekv.supabase.co/storage/v1/object/public/inquiry-files/${esc(payload.file_url)}" style="color:#b91c1c;font-weight:700;text-decoration:none;">파일 열기</a>
+          ${fileUrls
+            .map(
+              (url, i) =>
+                `<a href="https://zaajbkjzpzwxdinnrekv.supabase.co/storage/v1/object/public/inquiry-files/${esc(url)}" style="color:#b91c1c;font-weight:700;text-decoration:none;display:block;">파일 ${i + 1} 열기</a>`
+            )
+            .join("")}
         </td>
       </tr>`
     : "";
