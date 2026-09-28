@@ -453,7 +453,7 @@
                 ${row.daily_qty ? `<p><b class="text-slate-500 font-semibold">하루 생산량:</b> ${esc(row.daily_qty)}</p>` : ''}
                 ${row.processing_qty ? `<p><b class="text-slate-500 font-semibold">임가공 수량:</b> ${esc(row.processing_qty)}</p>` : ''}
                 ${row.message ? `<p><b class="text-slate-500 font-semibold">문의사항:</b> ${esc(row.message)}</p>` : ''}
-                ${row.file_url ? `<p><button class="text-red-700 font-bold hover:underline" onclick="event.stopPropagation(); openInquiryFile('${row.file_url}')">첨부파일 열기</button></p>` : ''}
+                ${(row.file_url || []).map((url, i) => `<p><button class="text-red-700 font-bold hover:underline" onclick="event.stopPropagation(); openInquiryFile('${url}')">첨부파일 ${i + 1} 열기</button></p>`).join('')}
             </div>
         </div>`;
     }
