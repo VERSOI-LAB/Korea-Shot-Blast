@@ -1,4 +1,4 @@
-// 문의 접수 함수들(submit-inquiry, send-inquiry-email)이 함께 쓰는 코드.
+// 문의 접수 함수(submit-inquiry)가 쓰는 코드.
 // 메일 HTML 생성, 스팸 판별, Resend 메일 발송.
 
 export const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
