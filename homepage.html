@@ -1194,6 +1194,9 @@
             <h3 class="text-2xl font-bold text-slate-900 mb-2">제품 견적 문의하기</h3>
             <p class="text-slate-500 text-xs mb-6">상세 내용을 남겨주시면 담당 엔지니어가 신속하게 연락드립니다.</p>
             <form onsubmit="handleFormSubmit(event, 'quoteModal')" class="space-y-4">
+                <div aria-hidden="true" style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;">
+                    <label>Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+                </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">업체명 *</label>
@@ -1252,6 +1255,9 @@
             <h3 class="text-2xl font-bold text-slate-900 mb-2">임가공 의뢰 문의</h3>
             <p class="text-slate-500 text-xs mb-6">가공하실 제품의 정보를 입력해 주시면 샘플 테스트 및 견적을 안내해 드립니다.</p>
             <form onsubmit="handleFormSubmit(event, 'processingModal')" class="space-y-4">
+                <div aria-hidden="true" style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;">
+                    <label>Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+                </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">업체명 *</label>
@@ -1297,6 +1303,9 @@
             <h3 class="text-2xl font-bold text-slate-900 mb-2">중고장비 구매 문의</h3>
             <p class="text-slate-500 text-xs mb-6">상세 내용을 남겨주시면 담당자가 신속하게 연락드립니다.</p>
             <form onsubmit="handleFormSubmit(event, 'usedModal')" class="space-y-4">
+                <div aria-hidden="true" style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;">
+                    <label>Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+                </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">업체명 *</label>
@@ -1494,8 +1503,10 @@
             document.getElementById('somo-' + catId).classList.remove('hidden');
         }
 
+        const modalOpenedAt = {};
         function openModal(modalId) {
             document.getElementById(modalId).classList.remove('hidden');
+            modalOpenedAt[modalId] = Date.now();
         }
         function closeModal(modalId) {
             document.getElementById(modalId).classList.add('hidden');
@@ -1801,11 +1812,52 @@
             switchPage('industry');
         }
 
+        // 스팸봇 판별: 무작위 대소문자 문자열(예: wBWXRDjRzUJdWQlpfrOgz)이 여러 칸에 들어있는지 확인
+        function looksRandom(v) {
+            const t = (v || '').toString().trim();
+            if (t.length < 10 || /\s/.test(t) || !/^[A-Za-z]+$/.test(t)) return false;
+            return (t.match(/[a-z][A-Z]/g) || []).length >= 2;
+        }
+        // 한국 전화번호(0으로 시작) 또는 국제번호(+로 시작)만 허용
+        function isValidPhone(v) {
+            const t = (v || '').toString().trim();
+            const digits = t.replace(/\D/g, '');
+            return /^[0-9+\-()\s.]+$/.test(t) && /^(\+|0)/.test(t) && digits.length >= 8 && digits.length <= 15;
+        }
+        // 점이 비정상적으로 많은 gmail 주소(예: m.ah.iki.b.i7.8.8@gmail.com)는 스팸봇의 전형적 패턴
+        function isDotSpamEmail(v) {
+            const m = (v || '').toString().trim().toLowerCase().match(/^([^@]+)@(gmail|googlemail)\.com$/);
+            return !!m && (m[1].match(/\./g) || []).length >= 4;
+        }
+
         async function handleFormSubmit(event, modalId) {
             event.preventDefault();
             const form = event.target;
             const submitBtn = form.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
+
+            const check = new FormData(form);
+            // 숨김 필드(website)는 사람에게 보이지 않으므로 값이 있으면 봇. 봇이 눈치채지 못하게 성공한 척만 한다.
+            if ((check.get('website') || '').toString().trim()) {
+                alert('문의가 성공적으로 접수되었습니다. 담당자가 확인 후 신속하게 연락드리겠습니다.');
+                closeModal(modalId);
+                form.reset();
+                return;
+            }
+            if (modalOpenedAt[modalId] && Date.now() - modalOpenedAt[modalId] < 3000) {
+                alert('입력 내용을 확인하신 후 다시 제출해주세요.');
+                return;
+            }
+            if (!isValidPhone(check.get('phone'))) {
+                alert('연락처를 정확히 입력해주세요. (예: 010-1234-5678, 해외는 +국가번호)');
+                return;
+            }
+            const textFields = ['company', 'contact_name', 'product_size', 'daily_qty', 'processing_qty', 'message'];
+            const randomCount = textFields.filter(k => looksRandom(check.get(k))).length;
+            if (randomCount >= 2 || isDotSpamEmail(check.get('email'))) {
+                alert('입력하신 내용으로는 접수가 어렵습니다. 전화(031-488-8390~1) 또는 이메일(blast@koreablast.com)로 문의해주세요.');
+                return;
+            }
             submitBtn.disabled = true;
             submitBtn.textContent = '접수 중...';
             try {

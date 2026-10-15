@@ -114,6 +114,33 @@ function buildEmailHtml(type: string, payload: Record<string, unknown>): string 
   </div>`;
 }
 
+// 스팸봇 판별 (homepage.html 의 클라이언트 검사와 동일한 기준).
+// 폼을 거치지 않고 함수를 직접 호출하는 봇도 메일이 발송되지 않도록 서버에서 한 번 더 확인한다.
+function looksRandom(v: unknown): boolean {
+  const t = String(v ?? "").trim();
+  if (t.length < 10 || /\s/.test(t) || !/^[A-Za-z]+$/.test(t)) return false;
+  return (t.match(/[a-z][A-Z]/g) || []).length >= 2;
+}
+
+function isValidPhone(v: unknown): boolean {
+  const t = String(v ?? "").trim();
+  const digits = t.replace(/\D/g, "");
+  return /^[0-9+\-()\s.]+$/.test(t) && /^(\+|0)/.test(t) && digits.length >= 8 && digits.length <= 15;
+}
+
+function isDotSpamEmail(v: unknown): boolean {
+  const m = String(v ?? "").trim().toLowerCase().match(/^([^@]+)@(gmail|googlemail)\.com$/);
+  return !!m && (m[1].match(/\./g) || []).length >= 4;
+}
+
+function isSpam(payload: Record<string, unknown>): boolean {
+  if (String(payload.website ?? "").trim()) return true;
+  if (!isValidPhone(payload.phone)) return true;
+  if (isDotSpamEmail(payload.email)) return true;
+  const textFields = ["company", "contact_name", "product_size", "daily_qty", "processing_qty", "message"];
+  return textFields.filter((k) => looksRandom(payload[k])).length >= 2;
+}
+
 serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
@@ -125,6 +152,13 @@ serve(async (req: Request) => {
       console.error("RESEND_API_KEY is not configured");
       return new Response(JSON.stringify({ error: "RESEND_API_KEY not configured" }), {
         status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    if (isSpam(payload)) {
+      console.warn("Spam inquiry ignored:", payload.company, payload.email);
+      return new Response(JSON.stringify({ ok: true }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
