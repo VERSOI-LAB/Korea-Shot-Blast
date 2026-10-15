@@ -20,6 +20,7 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=renderTurnstileWidgets" async defer></script>
     <!-- FontAwesome 아이콘 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -1244,6 +1245,7 @@
                     <label class="block text-xs font-bold text-slate-700 mb-1">문의사항</label>
                     <textarea rows="3" name="message" placeholder="문의하실 내용을 상세히 적어주세요." class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700"></textarea>
                 </div>
+                <div class="turnstile-widget" data-modal="quoteModal"></div>
                 <button type="submit" class="w-full bg-red-700 hover:bg-red-800 text-white py-3.5 rounded font-bold text-sm transition">견적 문의 접수하기</button>
             </form>
         </div>
@@ -1292,6 +1294,7 @@
                     <label class="block text-xs font-bold text-slate-700 mb-1">제품 이미지 (여러 개 선택 가능)</label>
                     <input type="file" name="file" accept="image/*" multiple class="w-full bg-slate-50 border border-slate-200 rounded px-2 py-2 text-xs focus:outline-none focus:border-red-700">
                 </div>
+                <div class="turnstile-widget" data-modal="processingModal"></div>
                 <button type="submit" class="w-full bg-red-700 hover:bg-red-800 text-white py-3.5 rounded font-bold text-sm transition">임가공 의뢰 제출하기</button>
             </form>
         </div>
@@ -1330,6 +1333,7 @@
                     <label class="block text-xs font-bold text-slate-700 mb-1">문의내용</label>
                     <textarea rows="3" name="message" placeholder="문의하실 내용을 상세히 적어주세요." class="w-full bg-slate-50 border border-slate-200 rounded px-4 py-3 text-sm focus:outline-none focus:border-red-700"></textarea>
                 </div>
+                <div class="turnstile-widget" data-modal="usedModal"></div>
                 <button type="submit" class="w-full bg-red-700 hover:bg-red-800 text-white py-3.5 rounded font-bold text-sm transition">구매 문의 접수하기</button>
             </form>
         </div>
@@ -1340,6 +1344,24 @@
         const SUPABASE_URL = 'https://zaajbkjzpzwxdinnrekv.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_rz9TSgU-f8njm7qOM7YPIg_3t95C2aw';
         const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Cloudflare Turnstile(무료 봇 인증) 사이트 키. Cloudflare 대시보드 > Turnstile 에서 발급.
+        const TURNSTILE_SITE_KEY = 'TURNSTILE_SITE_KEY_HERE';
+        const turnstileWidgetIds = {};
+
+        function renderTurnstileWidgets() {
+            document.querySelectorAll('.turnstile-widget').forEach(el => {
+                turnstileWidgetIds[el.dataset.modal] = turnstile.render(el, {
+                    sitekey: TURNSTILE_SITE_KEY,
+                    language: 'ko',
+                    size: 'flexible',
+                });
+            });
+        }
+
+        function resetTurnstile(modalId) {
+            const id = turnstileWidgetIds[modalId];
+            if (id !== undefined && window.turnstile) turnstile.reset(id);
+        }
         let quoteInquiryContext = null;
         let usedEquipmentCache = [];
 
@@ -1858,6 +1880,12 @@
                 alert('입력하신 내용으로는 접수가 어렵습니다. 전화(031-488-8390~1) 또는 이메일(blast@koreablast.com)로 문의해주세요.');
                 return;
             }
+            const widgetId = turnstileWidgetIds[modalId];
+            const turnstileToken = (widgetId !== undefined && window.turnstile) ? turnstile.getResponse(widgetId) : '';
+            if (!turnstileToken) {
+                alert('자동입력 방지 확인이 완료되지 않았습니다. 잠시 기다리시거나 체크박스를 눌러주세요.');
+                return;
+            }
             submitBtn.disabled = true;
             submitBtn.textContent = '접수 중...';
             try {
@@ -1890,10 +1918,17 @@
                     product_context: (type === 'quote' || type === 'used') ? quoteInquiryContext : null
                 };
 
-                const { error } = await sb.from('inquiries').insert(payload);
-                if (error) throw error;
-
-                sb.functions.invoke('send-inquiry-email', { body: payload }).catch(err => console.warn('알림 메일 발송 실패:', err));
+                // 저장과 알림 메일 발송은 서버(submit-inquiry)에서 봇 인증을 확인한 뒤 처리한다.
+                const { error } = await sb.functions.invoke('submit-inquiry', {
+                    body: { ...payload, turnstile_token: turnstileToken }
+                });
+                if (error) {
+                    if (error.context && error.context.status === 403) {
+                        alert('자동입력 방지 확인에 실패했습니다. 다시 시도해주세요.');
+                        return;
+                    }
+                    throw error;
+                }
 
                 alert('문의가 성공적으로 접수되었습니다. 담당자가 확인 후 신속하게 연락드리겠습니다.');
                 closeModal(modalId);
@@ -1903,6 +1938,7 @@
                 console.error(err);
                 alert('문의 접수 중 오류가 발생했습니다. 잠시 후 다시 시도해주시거나 전화(031-488-8390~1)로 문의해주세요.');
             } finally {
+                resetTurnstile(modalId);
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalText;
             }
